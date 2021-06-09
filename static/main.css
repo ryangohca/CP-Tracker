@@ -1,0 +1,45 @@
+.flexcontainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 3px;
+}
+
+.centered{
+    text-align: center;
+}
+
+#infocol{
+    width: 60%;
+    height: 500px;
+    border: 1px solid black;
+}
+
+#loginformdiv{
+    width: 40%;
+    height: 500px;
+    border: 1px solid black;
+}
+
+#loginformdiv form{
+    width: 100%;
+}
+
+#loginformdiv form div label{
+    width: 40%;
+    display: inline-block;
+    text-align: center;
+}
+
+#loginformdiv form div input{
+    width: 55%;
+}
+
+#loginformdiv form div{
+    margin-bottom: 5px;
+}
+
+#loginformdiv form input[type=submit]{
+    display: block;
+    margin: 0 auto;
+}

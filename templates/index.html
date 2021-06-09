@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+{% macro render_field(field) %}
+    <div>
+        {{ field.label }}
+        {{ field(**kwargs)|safe }}
+        {% if field.errors %}
+        <ul class=errors>
+            {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+<html>
+    <head>
+        <title> CP Tracker </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    </head>
+    <body>
+        <div class="flexcontainer">
+            <div id="infocol"> </div>
+            <div id="loginformdiv"> 
+                <h3 class="centered"> Sign In </h3>
+                <form action="{{ url_for('login') }}" method="POST" id="loginForm">
+                    {{ render_field(loginForm.username) }}
+                    {{ render_field(loginForm.password) }}
+                    <input type="submit" value="Log In"></input>
+                </form>
+                <hr>
+                <h4 class="centered"> OR </h4>
+                <hr>
+                <h3 class="centered"> Register </h3>
+                <form action="{{ url_for('signUp') }}" method="POST" id="signupForm">
+                    {{ render_field(signupForm.username) }}
+                    {{ render_field(signupForm.email) }}
+                    {{ render_field(signupForm.password) }}
+                    {{ render_field(signupForm.confirm) }}
+                    <input type="submit" value="Sign Up"></input>
+                </form>
+            </div>
+    </body>
+</html>
