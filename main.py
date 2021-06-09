@@ -6,12 +6,30 @@ from flask import render_template, request, redirect, url_for
 from wtforms import Form, StringField, PasswordField, validators
 
 def userNotExist(form, field):
-    data = field.data.strip()
+    username = field.data.strip()
     with open("static/passwords.json") as f:
         userDict = json.load(f)
-        if data in userDict:
-            raise validators.ValidationError("Username already exists.") 
+        if username in userDict:
+            raise validators.ValidationError("Username already exists.")
 
+def userExist(form, field):
+    username = field.data.strip()
+    with open("static/passwords.json") as f:
+        userDict = json.load(f)
+        if username not in userDict:
+            raise validators.ValidationError("Username does not exist in server.")
+
+def passwordMatch(form, field):
+    attemptedHashedPassword = hashlib.sha512(bytes(field.data.strip(), encoding='utf8')).hexdigest()
+    with open("static/passwords.json") as f:
+        userDict = json.load(f)
+        if form.username.data.strip() in userDict:
+            actualHashedPassword = userDict[form.username.data.strip()]['password']
+        else:
+            return
+    if attemptedHashedPassword != actualHashedPassword:
+        raise validators.ValidationError("Password is incorrect.")
+    
 class RegistrationForm(Form):
     username = StringField('Username:', [validators.DataRequired(), validators.Length(min=4, max=25), userNotExist])
     email = StringField('Email Address:', [validators.Length(min=6, max=35)])
@@ -22,10 +40,10 @@ class RegistrationForm(Form):
     confirm = PasswordField('Confirm Password:')
 
 class LoginForm(Form):
-    username = StringField('Username:', [validators.DataRequired(), validators.Length(min=4, max=25)])
+    username = StringField('Username:', [validators.DataRequired(), userExist])
     password = PasswordField('Password:', [
         validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match')
+        passwordMatch
     ])
 
 app = flask.Flask(__name__)
@@ -38,7 +56,10 @@ def root():
 
 @app.route("/login", methods=["POST"])
 def login():
-    pass
+    form = LoginForm(request.form)
+    if request.method == 'POST' and form.validate():
+        return redirect(url_for("success"))
+    return render_template('index.html', signupForm=RegistrationForm(), loginForm=form)
 
 @app.route("/success", methods=["GET", "POST"])
 def success():
