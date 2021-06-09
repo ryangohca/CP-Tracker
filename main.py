@@ -1,5 +1,5 @@
 import flask
-from flask import render_template, request
+from flask import render_template, request, redirect
 from wtforms import Form, StringField, PasswordField, validators
 
 class RegistrationForm(Form):
@@ -26,11 +26,16 @@ def root():
     loginForm = LoginForm()
     return render_template("index.html", signupForm=signupForm, loginForm=loginForm)
 
-@app.route("/login")
+@app.route("/login", methods=["POST"])
 def login():
     pass
 
-@app.route("/signup")
+@app.route("/", methods=["GET", "POST"])
 def signUp():
-    pass
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
+        print("hi")
+        return redirect('/register')
+    return render_template('index.html', signupForm=form, loginForm=LoginForm())
+
 app.run(host="0.0.0.0", port=8080, debug=True)
