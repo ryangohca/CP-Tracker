@@ -1,3 +1,8 @@
+nav {
+  overflow: hidden;
+  background-color: #333;
+}
+
 .flexcontainer{
   display: flex;
   align-items: center;
@@ -5,59 +10,29 @@
   padding-right: 3px;
 }
 
-.centered{
-    text-align: center;
+.lefttitle a{
+  display: inline-block;
+  vertical-align: middle;
+  color: #f2f2f2;
+  padding: 14px;
+  text-decoration: none;
+  font-weight: bold;
 }
 
-#infocol{
-    width: 60%;
-    height: 500px;
-    border: 1px solid black;
+.navlinks a{
+  display: inline-block;
+  vertical-align: middle;
+  color: #f2f2f2;
+  padding: 14px;
+  text-decoration: none;
+  font-weight: bold;
 }
 
-#loginformdiv{
-    width: 40%;
-    height: 500px;
-    border: 1px solid black;
+.navlinks a:hover{
+  background-color: #ddd;
+  color: black;
 }
 
-#loginformdiv form{
-    width: 100%;
-}
-
-#loginformdiv form div label{
-    width: 40%;
-    display: inline-block;
-    text-align: center;
-}
-
-#loginformdiv form div input{
-    width: 55%;
-}
-
-#loginformdiv form div{
-    margin-bottom: 5px;
-}
-
-#loginformdiv form input[type=submit]{
-    display: block;
-    margin: 0 auto;
-}
-
-@media only screen and (min-height: 500px){
-    body{
-        overflow: hidden;
-    }
-    
-    #infocol{
-        width: 60%;
-        height: 97vh;
-        border: 1px solid black;
-    }
-
-    #loginformdiv{
-        width: 40%;
-        height: 97vh;
-        border: 1px solid black;
-    }
+#pagetitle{
+  font-size: 28px;
 }
