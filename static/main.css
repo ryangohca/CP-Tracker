@@ -43,3 +43,21 @@
     display: block;
     margin: 0 auto;
 }
+
+@media only screen and (min-height: 500px){
+    body{
+        overflow: hidden;
+    }
+    
+    #infocol{
+        width: 60%;
+        height: 97vh;
+        border: 1px solid black;
+    }
+
+    #loginformdiv{
+        width: 40%;
+        height: 97vh;
+        border: 1px solid black;
+    }
+}
