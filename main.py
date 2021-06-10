@@ -2,8 +2,10 @@ import json
 import hashlib # as for now
 
 import flask
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, abort
 from wtforms import Form, StringField, PasswordField, validators
+
+loginUser = None  #Is there a better way?
 
 def userNotExist(form, field):
     username = field.data.strip()
@@ -56,17 +58,31 @@ def root():
 
 @app.route("/login", methods=["POST"])
 def login():
+    global loginUser
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
+        loginUser = form.username.data.strip()
         return redirect(url_for("success"))
     return render_template('index.html', signupForm=RegistrationForm(), loginForm=form)
 
-@app.route("/success", methods=["GET", "POST"])
+@app.route("/main", methods=["GET", "POST"])
 def success():
+    if loginUser is None:
+        return abort(503, "Access Denied")
+    #TODO: notify user login successful
     return render_template("success.html")
+
+@app.route("/logout")
+def logout():
+    global loginUser
+    loginUser = None
+    print(loginUser)
+    # TODO: notify user logout successful
+    return redirect(url_for('root'))
 
 @app.route("/", methods=["GET", "POST"])
 def signUp():
+    global loginUser 
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
         with open("static/passwords.json") as f:
@@ -77,6 +93,7 @@ def signUp():
             }
         with open("static/passwords.json", "w") as f:
             json.dump(userDict, f)
+        loginUser = form.username.data.strip()
         return redirect(url_for("success"))
     return render_template('index.html', signupForm=form, loginForm=LoginForm())
 
