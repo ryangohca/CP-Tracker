@@ -4,18 +4,17 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
         <title>CP Tracker</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='w3.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     </head>
     <body>
         <header>
-            <nav class="flexcontainer">
-                <div class="lefttitle">
-                    <a id="pagetitle"> CP Tracker </a>
-                </div>
-                <div class='navlinks'>
-                    <a href="/dummy"> My Problem Collection </a>
-                    <a href="{{ url_for('logout') }}"> Logout </a>
-                </div>
+            <!-- unfortunately w3.css does not support import to other css files -->
+            <nav class="w3-bar w3-black">
+                <a id="pagetitle" class="w3-bar-item w3-padding-16"> CP Tracker </a>
+                <!-- we have to do this in reverse order as w3-right is fifo -->
+                <a href="{{ url_for('logout') }}" class="w3-bar-item w3-button w3-right w3-padding-16"> Logout </a>
+                <a href="/dummy" class="w3-bar-item w3-button w3-right w3-padding-16"> My Problem Collection </a>
             </nav>
         </header>
         {% block body %}
