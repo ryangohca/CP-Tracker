@@ -3,7 +3,7 @@
 {% macro render_field(field) %}
     <div>
         {{ field.label }}
-        {{ field(**kwargs)|safe }}
+        {{ field(class_="w3-input w3-border", **kwargs)|safe }}
         {% if field.errors %}
         <ul class=errors>
             {% for error in field.errors %}
@@ -17,6 +17,7 @@
 <html>
     <head>
         <title> CP Tracker </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='w3.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
     </head>
     <body>
@@ -24,16 +25,16 @@
             <div id="infocol"> </div>
             <div id="loginformdiv"> 
                 <h3 class="centered"> Sign In </h3>
-                <form action="{{ url_for('login') }}" method="POST" id="loginForm">
+                <form action="{{ url_for('login') }}" method="POST" id="loginForm" class="w3-container">
                     {{ render_field(loginForm.username) }}
                     {{ render_field(loginForm.password) }}
                     <input type="submit" value="Log In"></input>
                 </form>
                 <hr>
-                <h4 class="centered"> OR </h4>
+                <h4 class="centered" id="orseparator"> OR </h4>
                 <hr>
                 <h3 class="centered"> Register </h3>
-                <form action="{{ url_for('signUp') }}" method="POST" id="signupForm">
+                <form action="{{ url_for('signUp') }}" method="POST" id="signupForm" class="w3-container">
                     {{ render_field(signupForm.username) }}
                     {{ render_field(signupForm.email) }}
                     {{ render_field(signupForm.password) }}

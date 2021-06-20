@@ -35,11 +35,8 @@ def passwordMatch(form, field):
 class RegistrationForm(Form):
     username = StringField('Username:', [validators.DataRequired(), validators.Length(min=4, max=25), userNotExist])
     email = StringField('Email Address:', [validators.Length(min=6, max=35)])
-    password = PasswordField('Password:', [
-        validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match')
-    ])
-    confirm = PasswordField('Confirm Password:')
+    password = PasswordField('Password:', [validators.DataRequired()])
+    confirm = PasswordField('Confirm Password:', [validators.EqualTo('password', message='Passwords must match')])
 
 class LoginForm(Form):
     username = StringField('Username:', [validators.DataRequired(), userExist])

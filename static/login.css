@@ -11,16 +11,24 @@
 
 #infocol{
     width: 60%;
-    height: 500px;
+    height: 800px;
     border: 1px solid black;
 }
 
 #loginformdiv{
     width: 40%;
-    height: 500px;
+    height: 800px;
     border: 1px solid black;
 }
 
+hr {
+    margin: 10px 0;
+}
+
+#orseparator{
+    margin: 3px 0;
+}
+/*
 #loginformdiv form{
     width: 100%;
 }
@@ -38,13 +46,15 @@
 #loginformdiv form div{
     margin-bottom: 5px;
 }
+*/
 
 #loginformdiv form input[type=submit]{
     display: block;
     margin: 0 auto;
+    margin-top: 10px;
 }
 
-@media only screen and (min-height: 500px){
+@media only screen and (min-height: 800px){
     body{
         overflow: hidden;
     }
