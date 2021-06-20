@@ -6,6 +6,9 @@
         <title>CP Tracker</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='w3.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+        {% block otherLinks %}
+        <!-- add other scripts and css stylesheets here -->
+        {% endblock %}
     </head>
     <body>
         <header>
