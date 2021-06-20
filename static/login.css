@@ -28,25 +28,6 @@ hr {
 #orseparator{
     margin: 3px 0;
 }
-/*
-#loginformdiv form{
-    width: 100%;
-}
-
-#loginformdiv form div label{
-    width: 40%;
-    display: inline-block;
-    text-align: center;
-}
-
-#loginformdiv form div input{
-    width: 55%;
-}
-
-#loginformdiv form div{
-    margin-bottom: 5px;
-}
-*/
 
 #loginformdiv form input[type=submit]{
     display: block;
