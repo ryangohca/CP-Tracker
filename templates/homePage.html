@@ -8,10 +8,13 @@
 <h2 class="maintitle"> My Collections </h2>
 <div id="collections">
     <div class="flexcontainer" id="collectionstab">
-        <button class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openTab("collectionscontainer","publicCollectionsDiv");'> Public Collections </button>
-        <button class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openTab("collectionscontainer","myCollectionsDiv");'> My Collections </button>
+        <button class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openCollectionsTab("publicCollectionsDiv");'> Public Collections </button>
+        <button class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openCollectionsTab("myCollectionsDiv");'> My Collections </button>
     </div>
     <div id="publicCollectionsDiv" class="w3-border collectionscontainer">
+        <p> To be added </p>
+    </div>
+    <div id="myCollectionsDiv" class="w3-border collectionscontainer">
         <div class="cardcontainer flexcontainer">
             {% for i in range(7) %}
             <button class="w3-card-4 collectionCard">
@@ -30,7 +33,7 @@
                 </div>
             </button>
             {% endfor %}
-            <button class="w3-card-4 collectionCard">
+            <button class="w3-card-4 collectionCard" onclick="openModal('addcollectionmodal')">
                 <div class="signtextgroup">
                     <div class="w3-border addsign"> <p class="addsigntext"> + </p> </div>
                     <div class="newcollectiontext"> Click to add a new collection... </div>    
@@ -38,8 +41,14 @@
             </button>
         </div>
     </div>
-    <div id="myCollectionsDiv" class="w3-border collectionscontainer">
-        <p> Testing 2 </p>
+</div>
+<div id="addcollectionmodal" class="w3-modal">
+    <div class="w3-modal-content">
+      <div class="w3-container">
+        <span onclick="closeModal('addcollectionmodal');" class="w3-button w3-display-topright">&times;</span>
+        <p>form here</p>
+        <p>form here</p>
+      </div>
     </div>
 </div>
 {% endblock %}
