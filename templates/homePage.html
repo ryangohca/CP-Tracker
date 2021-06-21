@@ -14,7 +14,7 @@
     <div id="publicCollectionsDiv" class="w3-border collectionscontainer">
         <div class="cardcontainer flexcontainer">
             {% for i in range(7) %}
-            <div class="w3-card-4 collectionCard">
+            <button class="w3-card-4 collectionCard">
                 <div class="h3-container w3-gray card-header">
                     <h3> Sample title </h3>
                 </div>
@@ -28,14 +28,14 @@
                 <div class="card-shared"> 
                     <p> <b> Shared: </b> 12/3/2020 </p>
                 </div>
-            </div>
+            </button>
             {% endfor %}
-            <div class="w3-card-4 collectionCard">
+            <button class="w3-card-4 collectionCard">
                 <div class="signtextgroup">
                     <div class="w3-border addsign"> <p class="addsigntext"> + </p> </div>
                     <div class="newcollectiontext"> Click to add a new collection... </div>    
                 </div>
-            </div>
+            </button>
         </div>
     </div>
     <div id="myCollectionsDiv" class="w3-border collectionscontainer">

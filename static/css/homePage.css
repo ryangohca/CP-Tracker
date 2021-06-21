@@ -17,7 +17,12 @@
 }
 
 .collectionCard{
+    display: block;
     margin: 10px;
+}
+
+.collectionCard:hover{
+    cursor: pointer;
 }
 
 .collectionCard > *{
