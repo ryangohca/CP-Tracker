@@ -13,18 +13,18 @@ function getLengthCardContainer(){
 
 function normaliseCardLength(cardLength){
     var containerLen = getLengthCardContainer();
-    console.log(containerLen);
-    var expectedCards = Math.floor(containerLen / cardLength);
+    var expectedCards = Math.round(containerLen / cardLength);
     for (var content of document.getElementsByClassName("collectionCard")) {
         content.style.width = (containerLen / expectedCards) - 30 + "px"; // 30px offset because of margin
     }
 }
 
+const cardLength = 360;
 window.onload = function(){
     openTab("collectionscontainer", "publicCollectionsDiv");
-    normaliseCardLength(350);
+    normaliseCardLength(cardLength);
 };
 
 window.onresize = function(){
-    normaliseCardLength(350);
+    normaliseCardLength(cardLength);
 }
