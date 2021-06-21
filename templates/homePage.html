@@ -1,0 +1,21 @@
+{% extends "template.html" %}
+{% block otherLinks %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homePage.css') }}">
+<script src="{{ url_for('static', filename='js/homePage.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<h2 class="maintitle"> My Collections </h2>
+<div id="collections">
+    <div class="flexcontainer" id="collectionstab">
+        <button class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openTab("collectionscontainer","publicCollectionsDiv");'> Public Collections </button>
+        <button class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openTab("collectionscontainer","myCollectionsDiv");'> My Collections </button>
+    </div>
+    <div id="publicCollectionsDiv" class="w3-border collectionscontainer">
+        <p> Testing </p>
+    </div>
+    <div id="myCollectionsDiv" class="w3-border collectionscontainer">
+        <p> Testing 2 </p>
+    </div>
+</div>
+{% endblock %}

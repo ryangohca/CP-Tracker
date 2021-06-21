@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
         <title>CP Tracker</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='w3.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
         {% block otherLinks %}
         <!-- add other scripts and css stylesheets here -->
         {% endblock %}
@@ -17,7 +17,7 @@
                 <a id="pagetitle" class="w3-bar-item w3-padding-16"> CP Tracker </a>
                 <!-- we have to do this in reverse order as w3-right is fifo -->
                 <a href="{{ url_for('logout') }}" class="w3-bar-item w3-button w3-right w3-padding-16"> Logout </a>
-                <a href="/dummy" class="w3-bar-item w3-button w3-right w3-padding-16"> My Problem Collection </a>
+                <a href="{{ url_for('success') }}" class="w3-bar-item w3-button w3-right w3-padding-16"> My Problem Collection </a>
             </nav>
         </header>
         {% block body %}

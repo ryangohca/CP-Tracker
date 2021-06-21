@@ -1,0 +1,17 @@
+#collections{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#collectionstab{
+    justify-content: stretch;
+}
+
+#collectionstab:after{
+    display: block;
+}
+
+.collectionscontainer{
+    padding-left: 20px;
+    padding-right: 20px;
+}

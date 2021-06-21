@@ -8,3 +8,11 @@ nav {
   justify-content: space-between;
   padding-right: 3px;
 }
+
+.flexcontainer:after{
+    display: block;
+}
+
+.maintitle{
+    padding-left: 20px;
+}

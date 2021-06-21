@@ -62,12 +62,12 @@ def login():
         return redirect(url_for("success"))
     return render_template('index.html', signupForm=RegistrationForm(), loginForm=form)
 
-@app.route("/main", methods=["GET", "POST"])
+@app.route("/home", methods=["GET", "POST"])
 def success():
     if loginUser is None:
         return abort(503, "Access Denied")
     #TODO: notify user login successful
-    return render_template("success.html")
+    return render_template("homePage.html")
 
 @app.route("/logout")
 def logout():
