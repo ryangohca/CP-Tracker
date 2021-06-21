@@ -6,24 +6,26 @@ from flask import render_template, request, redirect, url_for, abort
 from wtforms import Form, StringField, PasswordField, validators
 
 loginUser = None  #Is there a better way?
+PASSWORD_FILE = "static/data/passwords.json"
+COLLECTIONS_FILE = "static/data/collections.json"
 
 def userNotExist(form, field):
     username = field.data.strip()
-    with open("static/passwords.json") as f:
+    with open(PASSWORD_FILE) as f:
         userDict = json.load(f)
         if username in userDict:
             raise validators.ValidationError("Username already exists.")
 
 def userExist(form, field):
     username = field.data.strip()
-    with open("static/passwords.json") as f:
+    with open(PASSWORD_FILE) as f:
         userDict = json.load(f)
         if username not in userDict:
             raise validators.ValidationError("Username does not exist in server.")
 
 def passwordMatch(form, field):
     attemptedHashedPassword = hashlib.sha512(bytes(field.data.strip(), encoding='utf8')).hexdigest()
-    with open("static/passwords.json") as f:
+    with open(PASSWORD_FILE) as f:
         userDict = json.load(f)
         if form.username.data.strip() in userDict:
             actualHashedPassword = userDict[form.username.data.strip()]['password']
@@ -82,15 +84,21 @@ def signUp():
     global loginUser 
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
-        with open("static/passwords.json") as f:
+        with open(PASSWORD_FILE) as f:
             userDict = json.load(f)
             userDict[form.username.data.strip()] = {
                 "email": form.email.data,
                 "password": hashlib.sha512(bytes(form.password.data, encoding='utf8')).hexdigest()
             }
-        with open("static/passwords.json", "w") as f:
-            json.dump(userDict, f)
+        with open(PASSWORD_FILE, "w") as f:
+            json.dump(userDict, f, indent=4, sort_keys=True)
         loginUser = form.username.data.strip()
+        with open(COLLECTIONS_FILE) as f:
+            collections = json.load(f)
+        collections[loginUser] = {}
+        collections[loginUser]['collections'] = {}
+        with open(COLLECTIONS_FILE, 'w') as f:
+            json.dump(collections, f, indent=4, sort_keys=True)
         return redirect(url_for("success"))
     return render_template('index.html', signupForm=form, loginForm=LoginForm())
 
