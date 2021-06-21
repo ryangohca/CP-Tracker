@@ -29,3 +29,29 @@
     justify-content: stretch;
     flex-wrap: wrap;
 }
+
+.signtextgroup{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.addsign{
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.addsigntext{
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.newcollectiontext{
+    text-align: center;
+}

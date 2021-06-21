@@ -14,8 +14,13 @@ function getLengthCardContainer(){
 function normaliseCardLength(cardLength){
     var containerLen = getLengthCardContainer();
     var expectedCards = Math.round(containerLen / cardLength);
+    var maxHeight = 0;
     for (var content of document.getElementsByClassName("collectionCard")) {
         content.style.width = (containerLen / expectedCards) - 30 + "px"; // 30px offset because of margin
+        maxHeight = Math.max(content.offsetHeight, maxHeight);
+    }
+    for (var content of document.getElementsByClassName("collectionCard")) {
+        content.style.height = maxHeight + "px"; // 30px offset because of margin
     }
 }
 
