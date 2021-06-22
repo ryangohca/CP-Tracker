@@ -1,12 +1,24 @@
 {% extends "template.html" %}
 
 {% macro createProblemCollectionsForm(data) %}
-    <label for='collectionTitle'> Title: </label>
-    {% if 'collectionTitle' in data %}
-        <input class="w3-input w3-border" id={{'collectionTitle' + data['id']}} name='collectionTitle' type="text" value={{data['collectionTitle']}} required>
-    {% else %}
-        <input class="w3-input w3-border" id='newCollectionTitle' name="collectionTitle" type="text" required>
-    {% endif %}
+    <div class="flexcontainer">
+        <div class="titlefield">
+            <label for='collectionTitle'> Title: </label>
+            {% if 'collectionTitle' in data %}
+                <input class="w3-input w3-border" id={{data['id'] + '-collectionTitle'}} name='collectionTitle' type="text" value={{data['collectionTitle']}} maxlength="50" required>
+            {% else %}
+                <input class="w3-input w3-border" id='newCollectionTitle' name="collectionTitle" type="text" maxlength="50" required>
+            {% endif %}
+        </div>
+        <div class="idfield">
+            <label for='collectionID'> Collection ID*: </label>
+            {% if 'id' in data %}
+                <input class="w3-input w3-border" id={data['id'] + '-id'}} name='collectionID' type="text" value={{data['id']}} required disabled>
+            {% else %}
+                <input class="w3-input w3-border" id='newCollectionID' name="collectionID" type="text" required>
+            {% endif %}
+        </div>
+    </div>
     <label for='description'> Description: </label>
     {% if 'description' in data %}
         <textarea id={{'description' + data['id']}} name='description'> {{data['description']}} </textarea>
@@ -48,6 +60,7 @@
             </tbody>
         {% endif %}
     </table>
+    <p> *Collection ID is an unique identifier for your collection. <b> It cannot be changed after creation of collection. </b> </p>
 {% endmacro %}
 
 {% block otherLinks %}
@@ -70,7 +83,7 @@
             {% for i in range(7) %}
             <button class="w3-card-4 collectionCard">
                 <div class="h3-container w3-gray card-header">
-                    <h3> Sample title </h3>
+                    <h5> Sample title is sample title is sample title </h5>
                 </div>
                 <div class="w3-light-gray w3-border card-progress-bar">
                     <div class="w3-green w3-text-black" style="width: 20%"> 20% </div>
@@ -98,8 +111,9 @@
       <div class="w3-container">
         <span onclick="closeModal('addcollectionmodal');" class="w3-button w3-display-topright">&times;</span>
         <h3> Create New Collection </h3>
-        <form action="" method="POST" class="collectionForm w3-container">
+        <form action="{{ url_for('add_collection') }}" method="POST" class="collectionForm w3-container">
             {{createProblemCollectionsForm({})}}
+            <button id="submitNewCollection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Create Collection </button>
         </form>
       </div>
     </div>

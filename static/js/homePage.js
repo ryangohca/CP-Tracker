@@ -15,14 +15,23 @@ function normaliseCardLength(cardLength){
     var containerLen = getLengthCardContainer();
     var expectedCards = Math.round(containerLen / cardLength);
     var maxHeight = 0;
+    var maxTitleHeight = 0;
     for (var content of document.getElementsByClassName("collectionCard")) {
         if (content.parentElement.parentElement.style.display === 'none') continue;
         content.style.width = (containerLen / expectedCards) - 30 + "px"; // 30px offset because of margin
         maxHeight = Math.max(content.offsetHeight, maxHeight);
+        var title = content.getElementsByClassName("card-header");
+        if (title.length !== 0){
+            maxTitleHeight = Math.max(title[0].offsetHeight, maxTitleHeight);
+        }
     }
     for (var content of document.getElementsByClassName("collectionCard")) {
         if (content.parentElement.parentElement.style.display === 'none') continue;
-        content.style.height = maxHeight + "px"; // 30px offset because of margin
+        content.style.height = maxHeight + "px";
+        var title = content.getElementsByClassName("card-header");
+        if (title.length !== 0){
+            title[0].style.height = maxTitleHeight + "px";
+        }
     }
 }
 var idx = 0;
