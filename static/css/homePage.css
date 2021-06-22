@@ -60,3 +60,38 @@
 .newcollectiontext{
     text-align: center;
 }
+
+.collectionForm textarea{
+    width: 100%;
+    height: 80px;
+    resize: none;
+}
+
+.problemsTable{
+    width: 100%;
+}
+
+.problemsTable .clonedInput td input, .problemsTable .clonedInput td select{
+    height: 100%;
+    width: 100%;
+}
+
+.clone, .remove{
+    height: 100%;
+    width: 30px;
+    color: white;
+    border-radius: 10%;
+    border: none;
+}
+
+.clone:hover, .remove:hover{
+    cursor: pointer;
+}
+
+.clone{
+    background-color: rgb(33, 182, 33);
+}
+
+.remove{
+    background-color: red;
+}

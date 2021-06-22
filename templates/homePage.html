@@ -1,4 +1,53 @@
 {% extends "template.html" %}
+
+{% macro createProblemCollectionsForm(data) %}
+    <label for='collectionTitle'> Title: </label>
+    {% if 'collectionTitle' in data %}
+        <input class="w3-input w3-border" id={{'collectionTitle' + data['id']}} name='collectionTitle' type="text" value={{data['collectionTitle']}} required>
+    {% else %}
+        <input class="w3-input w3-border" id='newCollectionTitle' name="collectionTitle" type="text" required>
+    {% endif %}
+    <label for='description'> Description: </label>
+    {% if 'description' in data %}
+        <textarea id={{'description' + data['id']}} name='description'> {{data['description']}} </textarea>
+    {% else %}
+        <textarea id="newDescription" name="description"> </textarea>
+    {% endif %}
+    <label> Problem(s) </label>
+    <table class="w3-table-all problemsTable">
+        <thead>
+            <tr class="w3-white"> 
+                <th> Problem Name </th>
+                <th> Problem Link </th>
+                <th> Problem Format </th>
+                <th> Add/Remove </th>
+            </tr>
+        </thead>
+        {% if 'problems' in data %}
+            <!-- cry.............. -->
+        {% else %}
+            <tr id="clonedInput0" class="clonedInput">
+                <td>
+                    <input required type="text" value="" id="newProblemName-0" name="problemName-0" class="form-control" placeholder="Name">
+                </td>
+                <td>
+                    <input required type="url" value="" id="newProblemUrl-0" name="problemUrl-0" class="form-control" placeholder="https://codeforces.com/">
+                </td>
+                <td>
+                    <select id="newProblemFormat-0" name="problemFormat-0">
+                        <option value="IOI"> IOI </option>
+                        <option value="ICPC"> ICPC </option>
+                    </select>
+                </td>
+                <td>
+                    <button id="btnAdd_0" name="btnAdd_0" type="button" class="clone">+</button>
+                    <button id="btnDel_0" name="btnDel_0" type="button" class="remove">-</button>
+                </td>
+            </tr>
+        {% endif %}
+    </table>
+{% endmacro %}
+
 {% block otherLinks %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/homePage.css') }}">
 <script src="{{ url_for('static', filename='js/homePage.js') }}"></script>
@@ -46,8 +95,10 @@
     <div class="w3-modal-content">
       <div class="w3-container">
         <span onclick="closeModal('addcollectionmodal');" class="w3-button w3-display-topright">&times;</span>
-        <p>form here</p>
-        <p>form here</p>
+        <h3> Create New Collection </h3>
+        <form action="" method="POST" class="collectionForm w3-container">
+            {{createProblemCollectionsForm({})}}
+        </form>
       </div>
     </div>
 </div>
