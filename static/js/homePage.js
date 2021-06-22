@@ -25,9 +25,19 @@ function normaliseCardLength(cardLength){
         content.style.height = maxHeight + "px"; // 30px offset because of margin
     }
 }
+var idx = 0;
+var idRegex = /^(.*)(\d)+$/i;
+
+function getLargestProblemIndex(modalId){
+    var elems = document.querySelectorAll("#" + modalId + " div div form table tbody .clonedInput");
+    var latestElem = elems[elems.length-1];
+    var matching = latestElem.id.match(idRegex);
+    return parseInt(matching[2]);
+}
 
 function openModal(modalId){
     document.getElementById(modalId).style.display='block';
+    idx = getLargestProblemIndex(modalId);
 }
 
 function closeModal(modalId){
@@ -39,8 +49,6 @@ function openCollectionsTab(tabID){
     normaliseCardLength(cardLength);
 }
 
-var idx = 0;
-var idRegex = /^(.*)(\d)+$/i;
 function clone(){
     idx += 1;
     var clonedElement = this.closest(".clonedInput").cloneNode(true);
@@ -57,7 +65,7 @@ function clone(){
             elem.name = matches[1] + idx;
         }
     }
-    this.closest(".problemsTable").appendChild(clonedElement);
+    this.closest(".clonedInput").parentElement.appendChild(clonedElement);
     document.querySelector("#" + clonedElement.id + " td .clone").onclick = clone;
     document.querySelector("#" + clonedElement.id + " td .remove").onclick = remove;
 }

@@ -26,24 +26,26 @@
         {% if 'problems' in data %}
             <!-- cry.............. -->
         {% else %}
-            <tr id="clonedInput0" class="clonedInput">
-                <td>
-                    <input required type="text" value="" id="newProblemName-0" name="problemName-0" class="form-control" placeholder="Name">
-                </td>
-                <td>
-                    <input required type="url" value="" id="newProblemUrl-0" name="problemUrl-0" class="form-control" placeholder="https://codeforces.com/">
-                </td>
-                <td>
-                    <select id="newProblemFormat-0" name="problemFormat-0">
-                        <option value="IOI"> IOI </option>
-                        <option value="ICPC"> ICPC </option>
-                    </select>
-                </td>
-                <td>
-                    <button id="btnAdd_0" name="btnAdd_0" type="button" class="w3-button clone">+</button>
-                    <button id="btnDel_0" name="btnDel_0" type="button" class="w3-button remove">-</button>
-                </td>
-            </tr>
+            <tbody>
+                <tr id="newClonedInput0" class="clonedInput">
+                    <td>
+                        <input required type="text" value="" id="newProblemName-0" name="problemName-0" class="form-control" placeholder="Name">
+                    </td>
+                    <td>
+                        <input required type="url" value="" id="newProblemUrl-0" name="problemUrl-0" class="form-control" placeholder="https://codeforces.com/">
+                    </td>
+                    <td>
+                        <select id="newProblemFormat-0" name="problemFormat-0">
+                            <option value="IOI"> IOI </option>
+                            <option value="ICPC"> ICPC </option>
+                        </select>
+                    </td>
+                    <td>
+                        <button id="btnAdd_0" name="btnAdd_0" type="button" class="w3-button clone">+</button>
+                        <button id="btnDel_0" name="btnDel_0" type="button" class="w3-button remove">-</button>
+                    </td>
+                </tr>
+            </tbody>
         {% endif %}
     </table>
 {% endmacro %}
