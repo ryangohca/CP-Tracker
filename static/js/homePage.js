@@ -38,9 +38,42 @@ function openCollectionsTab(tabID){
     openTab("collectionscontainer", tabID);
     normaliseCardLength(cardLength);
 }
+
+var idx = 0;
+var idRegex = /^(.*)(\d)+$/i;
+function clone(){
+    idx += 1;
+    var clonedElement = this.closest(".clonedInput").cloneNode(true);
+    clonedElement.id = "clonedInput" + idx;
+    for (var elem of clonedElement.childNodes){
+        var elemID = elem.id || '';
+        var matches = elemID.match(idRegex)
+        if (matches !== null && matches.length == 3){
+            elem.id = matches[1] + idx;
+        }
+        var elemName = elem.name || '';
+        matches = elemName.match(idRegex);
+        if (matches !== null && matches.length == 3){
+            elem.name = matches[1] + idx;
+        }
+    }
+    this.closest(".problemsTable").appendChild(clonedElement);
+    document.querySelector("#" + clonedElement.id + " td .clone").onclick = clone;
+    document.querySelector("#" + clonedElement.id + " td .remove").onclick = remove;
+}
+
+function remove(){
+    // do nothing for now
+}
 const cardLength = 360;
 window.onload = function(){
     openCollectionsTab("publicCollectionsDiv");
+    for (var elem of document.getElementsByClassName("clone")){
+        elem.onclick = clone;
+    }
+    for (var elem of document.getElementsByClassName("remove")){
+        elem.onclick = remove;
+    }
 }
 
 window.onresize = function(){

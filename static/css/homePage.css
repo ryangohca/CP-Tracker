@@ -80,8 +80,9 @@
     height: 100%;
     width: 30px;
     color: white;
-    border-radius: 10%;
+    border-radius: 20%;
     border: none;
+    padding: 1px;
 }
 
 .clone:hover, .remove:hover{
