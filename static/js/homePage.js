@@ -35,7 +35,7 @@ function normaliseCardLength(cardLength){
     }
 }
 var idx = 0;
-var idRegex = /^(.*)(\d)+$/i;
+const idRegex = /^(.*)(\d)+$/i;
 
 function getLargestProblemIndex(modalId){
     var elems = document.querySelectorAll("#" + modalId + " div div form table tbody .clonedInput");

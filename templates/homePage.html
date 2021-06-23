@@ -5,7 +5,7 @@
         <div class="titlefield">
             <label for='collectionTitle'> Title: </label>
             {% if 'collectionTitle' in data %}
-                <input class="w3-input w3-border" id={{data['id'] + '-collectionTitle'}} name='collectionTitle' type="text" value={{data['collectionTitle']}} maxlength="50" required>
+                <input class="w3-input w3-border" id={{data['id'] + '-collectionTitle'}} name='collectionTitle' type="text" value={{data['title']}} maxlength="50" required>
             {% else %}
                 <input class="w3-input w3-border" id='newCollectionTitle' name="collectionTitle" type="text" maxlength="50" required>
             {% endif %}
@@ -13,15 +13,20 @@
         <div class="idfield">
             <label for='collectionID'> Collection ID*: </label>
             {% if 'id' in data %}
-                <input class="w3-input w3-border" id={data['id'] + '-id'}} name='collectionID' type="text" value={{data['id']}} required disabled>
+                <input class="w3-input w3-border" id={{data['id'] + '-id'}} name='collectionID' type="text" value={{data['id']}} required disabled>
             {% else %}
                 <input class="w3-input w3-border" id='newCollectionID' name="collectionID" type="text" required>
             {% endif %}
         </div>
     </div>
+    {% if 'id' in data %}
+        <input id={{data['id'] + '-idPrefilled'}} name='idPrefilled' type="hidden" value="true">
+    {% else %}
+        <input id='newIdPrefilled' name='idPrefilled' type="hidden" value="false">
+    {% endif %}
     <label for='description'> Description: </label>
     {% if 'description' in data %}
-        <textarea id={{'description' + data['id']}} name='description'> {{data['description']}} </textarea>
+        <textarea id={{data['id'] + '-description'}} name='description'> {{data['description']}} </textarea>
     {% else %}
         <textarea id="newDescription" name="description"> </textarea>
     {% endif %}
@@ -60,7 +65,17 @@
             </tbody>
         {% endif %}
     </table>
-    <p> *Collection ID is an unique identifier for your collection. <b> It cannot be changed after creation of collection. </b> </p>
+    {% if 'isPublic' in data %}
+        {% if data['isPublic'] is True %}
+            <input type="checkbox" id={{data['id'] + "-publicCheckbox"}} name="publicCheckbox" value="public" checked>
+        {% else %}
+            <input type="checkbox" id={{data['id'] + "-publicCheckbox"}} name="publicCheckbox" value="public">
+        {% endif %}
+    {% else %}
+        <input type="checkbox" id="newPublicCheckbox" name="publicCheckbox" value="public">
+    {% endif %}
+    <label for="publicCheckbox"> Add Collection to Public </label>
+    <p> *Collection ID is an unique identifier for your collection. <b> It cannot be changed after creation of collection, and will be renamed arbitrarily if the ID already exists in server. </b> To prevent this, please check that your ID has not already been taken <a href="/dummy">here</a>.</p>
 {% endmacro %}
 
 {% block otherLinks %}
@@ -111,7 +126,7 @@
       <div class="w3-container">
         <span onclick="closeModal('addcollectionmodal');" class="w3-button w3-display-topright">&times;</span>
         <h3> Create New Collection </h3>
-        <form action="{{ url_for('add_collection') }}" method="POST" class="collectionForm w3-container">
+        <form action="{{ url_for('addCollection') }}" method="POST" class="collectionForm w3-container">
             {{createProblemCollectionsForm({})}}
             <button id="submitNewCollection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Create Collection </button>
         </form>

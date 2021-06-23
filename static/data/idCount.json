@@ -1,4 +1,0 @@
-{
-    "__comment": "Give an unique id to each collection upon creation; this would help resolve same name conflicts in `public.json`.",
-    "currID": 1
-}

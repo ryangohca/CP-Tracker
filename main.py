@@ -1,13 +1,15 @@
 import json
 import hashlib # as for now
+import re
 
 import flask
 from flask import render_template, request, redirect, url_for, abort
 from wtforms import Form, StringField, PasswordField, validators
 
 loginUser = None  #Is there a better way?
-PASSWORD_FILE = "static/data/passwords.json"
-COLLECTIONS_FILE = "static/data/collections.json"
+PASSWORD_FILE = "data/passwords.json"
+COLLECTIONS_FILE = "data/collections.json"
+IDNAME_FILE = "data/idNames.json"
 
 def userNotExist(form, field):
     username = field.data.strip()
@@ -102,4 +104,82 @@ def signUp():
         return redirect(url_for("success"))
     return render_template('index.html', signupForm=form, loginForm=LoginForm())
 
+def usedID(id):
+    """Checks if ID is already used in the server."""
+    with open(IDNAME_FILE) as f:
+        ids = json.load(f)
+        if id in ids:
+            return True
+        else:
+            return False
+
+def reformID(usedID):
+    with open(IDNAME_FILE) as f:
+        ids = json.load(f)
+    regex = re.compile("^(.*)(\d)*$")
+    baseName = regex.match(usedID).group(1)
+    curridx = 1 # We do not want a "<name>0"
+    while True:
+        if baseName + str(curridx) in ids:
+            curridx += 1
+        else:
+            return baseName + str(curridx)
+
+def addIDToServer(collectionID):
+    with open(IDNAME_FILE) as f:
+        ids = json.load(f)
+    ids[collectionID] = None
+    with open(IDNAME_FILE, 'w') as f:
+        json.dump(ids, f, indent=4, sort_keys=True)
+
+def addJSONOfCollectionSkeletonInUser(user, collectionID):
+    with open(COLLECTIONS_FILE) as f:
+        allUserCollections = json.load(f)
+    skeleton = {}
+    skeleton['title'] = ''
+    skeleton['id'] = ''
+    skeleton['description'] = ''
+    skeleton['problems'] = []
+    skeleton['isPublic'] = False
+    allUserCollections[user]['collections'][collectionID] = skeleton
+    with open(COLLECTIONS_FILE, 'w') as f:
+        json.dump(allUserCollections, f, indent=4, sort_keys=True)
+
+@app.route("/addCollection", methods=["GET", "POST"])
+def addCollection():
+    print("hi")
+    global loginUser
+    userCollectionIDInput = request.form["collectionID"]
+    collectionID = userCollectionIDInput
+    warning = ""
+    if request.form['idPrefilled'] == "false":
+        if usedID(userCollectionIDInput):
+            collectionID = reformID(userCollectionIDInput)
+            warning = f"Collection ID '{userCollectionIDInput}' has been renamed to '{collectionID}' as it is already in use."
+        addIDToServer(collectionID)
+        addJSONOfCollectionSkeletonInUser(loginUser, collectionID)
+    with open(COLLECTIONS_FILE) as f:
+        allUsersCollections = json.load(f)
+    currCollection = allUsersCollections[loginUser]['collections'][collectionID]
+    currCollection['title'] = request.form['collectionTitle']
+    currCollection['id'] = collectionID
+    currCollection['description'] = request.form['description']
+    if 'publicCheckbox' in request.form:
+        currCollection['isPublic'] = True
+    else:
+        currCollection['isPublic'] = False
+    regex = re.compile("^(.*)(\d)+$")
+    for name in request.form:
+        if name.startswith("problemName-"):
+            number = regex.match(name).group(2)
+            currProblem = {}
+            currProblem['name'] = request.form["problemName-" + number]
+            currProblem['url'] = request.form["problemUrl-" + number]
+            currProblem['format'] = request.form["problemFormat-" + number]
+            currCollection['problems'].append(currProblem)
+    allUsersCollections[loginUser]['collections'][collectionID] = currCollection
+    with open(COLLECTIONS_FILE, 'w') as f:
+        json.dump(allUsersCollections, f, indent=4, sort_keys=True)
+    return redirect('/home')
+    
 app.run(host="0.0.0.0", port=8080, debug=True)
