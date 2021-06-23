@@ -66,7 +66,7 @@
         {% endif %}
     </table>
     {% if 'isPublic' in data %}
-        {% if data['isPublic'] is True %}
+        {% if data['isPublic'] is sameas true %}
             <input type="checkbox" id={{data['id'] + "-publicCheckbox"}} name="publicCheckbox" value="public" checked>
         {% else %}
             <input type="checkbox" id={{data['id'] + "-publicCheckbox"}} name="publicCheckbox" value="public">
@@ -95,22 +95,31 @@
     </div>
     <div id="myCollectionsDiv" class="w3-border collectionscontainer">
         <div class="cardcontainer flexcontainer">
-            {% for i in range(7) %}
-            <button class="w3-card-4 collectionCard">
-                <div class="h3-container w3-gray card-header">
-                    <h5> Sample title is sample title is sample title </h5>
-                </div>
-                <div class="w3-light-gray w3-border card-progress-bar">
-                    <div class="w3-green w3-text-black" style="width: 20%"> 20% </div>
-                </div>
-                <div class="card-desc"> This is sample text. </div>
-                <div class="card-created"> 
-                    <p> <b> Created on: </b> 12/3/2020 </p>
-                </div>
-                <div class="card-shared"> 
-                    <p> <b> Shared: </b> 12/3/2020 </p>
-                </div>
-            </button>
+            {% for key in orderKey %}
+                {% set value = myCollections[key] %}
+                <button class="w3-card-4 collectionCard">
+                    <div class="h3-container w3-gray card-header">
+                        <h5> {{value['title']}} </h5>
+                    </div>
+                    <div class="w3-light-gray w3-border card-progress-bar">
+                        {% set percentage = (value['solvedProblems'] / value['totalProblems'] * 100)|round|int %}
+                        <div class="w3-green w3-text-black" style="width: {{percentage}}%"> {{percentage}}% </div>
+                    </div>
+                    <div class="card-desc"> {{value['description']}} </div>
+                    <div class="card-created"> 
+                        <p> <b> Created on: </b> {{value['createdDate']}} </p>
+                    </div>
+                    <div class="card-shared"> 
+                        <p> 
+                            <b> Shared: </b> 
+                            {% if value['publishedDate'] is not none %}
+                                {{value['publishedDate']}}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </p>
+                    </div>
+                </button>
             {% endfor %}
             <button class="w3-card-4 collectionCard" onclick="openModal('addcollectionmodal')">
                 <div class="signtextgroup">

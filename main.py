@@ -1,6 +1,7 @@
 import json
 import hashlib # as for now
 import re
+from datetime import date, datetime
 
 import flask
 from flask import render_template, request, redirect, url_for, abort
@@ -70,10 +71,13 @@ def login():
 def success():
     if loginUser is None:
         return abort(503, "Access Denied")
-    #TODO: notify user login successful
-    if 'warning' in request.args and request.args['warning'] != '':
-        return render_template("homePage.html", warning=request.args['warning'])
-    return render_template("homePage.html")
+    #TODO: notify user login successful\
+    with open(COLLECTIONS_FILE) as f:
+        myCollections = json.load(f)[loginUser]["collections"]
+    orderKey = sorted(myCollections, key=lambda x: datetime.strptime(myCollections[x]["createdDate"], "%d/%m/%Y"))
+    if 'warning' in request.args:
+        return render_template("homePage.html", warning=request.args['warning'], myCollections=myCollections, orderKey=orderKey)
+    return render_template("homePage.html", myCollections=myCollections, orderKey=orderKey)
 
 @app.route("/logout")
 def logout():
@@ -156,12 +160,21 @@ def addCollection():
     currCollection['description'] = request.form['description']
     if 'publicCheckbox' in request.form:
         currCollection['isPublic'] = True
+        if 'publishedDate' in allUsersCollections[loginUser]['collections'][collectionID] and allUsersCollections[loginUser]['collections'][collectionID]['publishedDate'] is not None:
+            currCollection['publishedDate'] = allUsersCollections[loginUser]['collections'][collectionID]['publishedDate']
+        else:
+            currCollection['publishedDate'] = date.today().strftime("%d/%m/%Y")
     else:
         currCollection['isPublic'] = False
+        currCollection["publishedDate"] = None
     if 'problems' in allUsersCollections[loginUser]['collections'][collectionID]:
         prevProblems = {problem['name']: problem for problem in allUsersCollections[loginUser]['collections'][collectionID]['problems']}
     else:
         prevProblems = {}
+    if 'createdDate' in allUsersCollections[loginUser]['collections'][collectionID]:
+        currCollection['createdDate'] = allUsersCollections[loginUser]['collections'][collectionID]['createdDate']
+    else:
+        currCollection['createdDate'] = date.today().strftime("%d/%m/%Y")
     regex = re.compile("^(.*)(\d)+$")
     currCollection['problems'] = []
     solvedProblems = 0
@@ -181,6 +194,8 @@ def addCollection():
     allUsersCollections[loginUser]['collections'][collectionID] = currCollection
     with open(COLLECTIONS_FILE, 'w') as f:
         json.dump(allUsersCollections, f, indent=4, sort_keys=True)
-    return redirect(url_for('success', warning=warning))
+    if warning != '':
+        return redirect(url_for('success', warning=warning))
+    return redirect(url_for('success'))
     
 app.run(host="0.0.0.0", port=8080, debug=True)

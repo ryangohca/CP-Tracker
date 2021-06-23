@@ -5,6 +5,7 @@
     "ryangohca": {
         "collections": {
             "convexhull": {
+                "createdDate": "22/06/2021",
                 "description": "Slopes",
                 "id": "convexhull",
                 "isPublic": true,
@@ -16,11 +17,43 @@
                         "url": "https://codebreaker.xyz/problem/convexhull"
                     }
                 ],
+                "publishedDate": "23/06/2021",
                 "solvedProblems": 0,
                 "title": "Convex Hull Practice Problems",
                 "totalProblems": 1
             },
+            "slopetrick": {
+                "createdDate": "29/05/2021",
+                "description": " Slope Trick Practice",
+                "id": "slopetrick",
+                "isPublic": false,
+                "problems": [
+                    {
+                        "format": "IOI",
+                        "name": "Sonya",
+                        "solved": false,
+                        "url": "https://codebreaker.xyz/problem/sonya"
+                    },
+                    {
+                        "format": "IOI",
+                        "name": "Safety",
+                        "solved": false,
+                        "url": "https://codebreaker.xyz/problem/safety"
+                    },
+                    {
+                        "format": "IOI",
+                        "name": "Fireworks",
+                        "solved": false,
+                        "url": "https://oj.uz/problem/view/APIO16_fireworks"
+                    }
+                ],
+                "publishedDate": null,
+                "solvedProblems": 0,
+                "title": "Slope Trick Practice Problems",
+                "totalProblems": 3
+            },
             "sqrtdecomp": {
+                "createdDate": "23/06/2021",
                 "description": " return abort(503, \"Access Denied\")",
                 "id": "sqrtdecomp",
                 "isPublic": true,
@@ -28,7 +61,7 @@
                     {
                         "format": "IOI",
                         "name": "Fenwick Tree",
-                        "solved": false,
+                        "solved": true,
                         "url": "https://codebreaker.xyz/problem/fenwicktree"
                     },
                     {
@@ -38,7 +71,8 @@
                         "url": "https://codeforces.com/contest/220/problem/B"
                     }
                 ],
-                "solvedProblems": 0,
+                "publishedDate": "23/06/2021",
+                "solvedProblems": 1,
                 "title": "Square Root Decomposition Practice Problems",
                 "totalProblems": 2
             }

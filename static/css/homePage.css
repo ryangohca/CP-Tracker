@@ -36,6 +36,10 @@
     flex-wrap: wrap;
 }
 
+.card-progress-bar > *{
+    text-align: right;
+}
+
 .signtextgroup{
     display: flex;
     flex-direction: column;
