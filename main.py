@@ -71,6 +71,8 @@ def success():
     if loginUser is None:
         return abort(503, "Access Denied")
     #TODO: notify user login successful
+    if 'warning' in request.args and request.args['warning'] != '':
+        return render_template("homePage.html", warning=request.args['warning'])
     return render_template("homePage.html")
 
 @app.route("/logout")
@@ -116,7 +118,7 @@ def usedID(id):
 def reformID(usedID):
     with open(IDNAME_FILE) as f:
         ids = json.load(f)
-    regex = re.compile("^(.*)(\d)*$")
+    regex = re.compile("^(.*?)(\d*)$")
     baseName = regex.match(usedID).group(1)
     curridx = 1 # We do not want a "<name>0"
     while True:
@@ -132,35 +134,23 @@ def addIDToServer(collectionID):
     with open(IDNAME_FILE, 'w') as f:
         json.dump(ids, f, indent=4, sort_keys=True)
 
-def addJSONOfCollectionSkeletonInUser(user, collectionID):
-    with open(COLLECTIONS_FILE) as f:
-        allUserCollections = json.load(f)
-    skeleton = {}
-    skeleton['title'] = ''
-    skeleton['id'] = ''
-    skeleton['description'] = ''
-    skeleton['problems'] = []
-    skeleton['isPublic'] = False
-    allUserCollections[user]['collections'][collectionID] = skeleton
-    with open(COLLECTIONS_FILE, 'w') as f:
-        json.dump(allUserCollections, f, indent=4, sort_keys=True)
-
 @app.route("/addCollection", methods=["GET", "POST"])
 def addCollection():
-    print("hi")
     global loginUser
+    if loginUser is None:
+        return abort(503, "Access Denied")
     userCollectionIDInput = request.form["collectionID"]
     collectionID = userCollectionIDInput
     warning = ""
+    with open(COLLECTIONS_FILE) as f:
+        allUsersCollections = json.load(f)
     if request.form['idPrefilled'] == "false":
         if usedID(userCollectionIDInput):
             collectionID = reformID(userCollectionIDInput)
             warning = f"Collection ID '{userCollectionIDInput}' has been renamed to '{collectionID}' as it is already in use."
         addIDToServer(collectionID)
-        addJSONOfCollectionSkeletonInUser(loginUser, collectionID)
-    with open(COLLECTIONS_FILE) as f:
-        allUsersCollections = json.load(f)
-    currCollection = allUsersCollections[loginUser]['collections'][collectionID]
+        allUsersCollections[loginUser]['collections'][collectionID] = {}
+    currCollection = {}
     currCollection['title'] = request.form['collectionTitle']
     currCollection['id'] = collectionID
     currCollection['description'] = request.form['description']
@@ -168,7 +158,13 @@ def addCollection():
         currCollection['isPublic'] = True
     else:
         currCollection['isPublic'] = False
+    if 'problems' in allUsersCollections[loginUser]['collections'][collectionID]:
+        prevProblems = {problem['name']: problem for problem in allUsersCollections[loginUser]['collections'][collectionID]['problems']}
+    else:
+        prevProblems = {}
     regex = re.compile("^(.*)(\d)+$")
+    currCollection['problems'] = []
+    solvedProblems = 0
     for name in request.form:
         if name.startswith("problemName-"):
             number = regex.match(name).group(2)
@@ -176,10 +172,15 @@ def addCollection():
             currProblem['name'] = request.form["problemName-" + number]
             currProblem['url'] = request.form["problemUrl-" + number]
             currProblem['format'] = request.form["problemFormat-" + number]
+            currProblem['solved'] = prevProblems[currProblem['name']]['solved'] if currProblem['name'] in prevProblems else False
+            if currProblem['solved']:
+                solvedProblems += 1
             currCollection['problems'].append(currProblem)
+    currCollection['solvedProblems'] = solvedProblems
+    currCollection['totalProblems'] = len(currCollection['problems'])
     allUsersCollections[loginUser]['collections'][collectionID] = currCollection
     with open(COLLECTIONS_FILE, 'w') as f:
         json.dump(allUsersCollections, f, indent=4, sort_keys=True)
-    return redirect('/home')
+    return redirect(url_for('success', warning=warning))
     
 app.run(host="0.0.0.0", port=8080, debug=True)

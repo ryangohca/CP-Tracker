@@ -4,49 +4,21 @@
     },
     "ryangohca": {
         "collections": {
-            "test": {
-                "description": " why do I have to do this again...",
-                "id": "test",
-                "isPublic": false,
+            "convexhull": {
+                "description": "Slopes",
+                "id": "convexhull",
+                "isPublic": true,
                 "problems": [
-                    {
-                        "format": "ICPC",
-                        "name": "Argh",
-                        "url": "https://codeforces.com"
-                    }
-                ],
-                "title": "Testing"
-            },
-            "test1": {
-                "description": " This is just a test",
-                "id": "test1",
-                "isPublic": false,
-                "problems": [
-                    {
-                        "format": "ICPC",
-                        "name": "Random Name",
-                        "url": "https://codeforces.com"
-                    }
-                ],
-                "title": "Testing"
-            },
-            "test2": {
-                "description": " duplicate collection id testing",
-                "id": "test2",
-                "isPublic": false,
-                "problems": [
-                    {
-                        "format": "ICPC",
-                        "name": "Argh",
-                        "url": "https://codeforces.com"
-                    },
                     {
                         "format": "IOI",
-                        "name": "Hurt",
-                        "url": "https://codeforces.com"
+                        "name": "Convex Hull",
+                        "solved": false,
+                        "url": "https://codebreaker.xyz/problem/convexhull"
                     }
                 ],
-                "title": "Testing"
+                "solvedProblems": 0,
+                "title": "Convex Hull Practice Problems",
+                "totalProblems": 1
             }
         }
     }
