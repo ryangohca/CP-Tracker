@@ -99,7 +99,7 @@
                 {% set value = myCollections[key] %}
                 <button class="w3-card-4 collectionCard">
                     <div class="h3-container w3-gray card-header">
-                        <h5> {{value['title']}} </h5>
+                        <h5 class="card-title"> {{value['title']}} </h5>
                     </div>
                     <div class="w3-light-gray w3-border card-progress-bar">
                         {% set percentage = (value['solvedProblems'] / value['totalProblems'] * 100)|round|int %}

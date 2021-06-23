@@ -22,7 +22,8 @@ function normaliseCardLength(cardLength){
         maxHeight = Math.max(content.offsetHeight, maxHeight);
         var title = content.getElementsByClassName("card-header");
         if (title.length !== 0){
-            maxTitleHeight = Math.max(title[0].offsetHeight, maxTitleHeight);
+            var actualTitleHeight = title[0].getElementsByClassName("card-title")[0].offsetHeight;
+            maxTitleHeight = Math.max(actualTitleHeight, maxTitleHeight);
         }
     }
     for (var content of document.getElementsByClassName("collectionCard")) {
