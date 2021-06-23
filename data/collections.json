@@ -19,6 +19,28 @@
                 "solvedProblems": 0,
                 "title": "Convex Hull Practice Problems",
                 "totalProblems": 1
+            },
+            "sqrtdecomp": {
+                "description": " return abort(503, \"Access Denied\")",
+                "id": "sqrtdecomp",
+                "isPublic": true,
+                "problems": [
+                    {
+                        "format": "IOI",
+                        "name": "Fenwick Tree",
+                        "solved": false,
+                        "url": "https://codebreaker.xyz/problem/fenwicktree"
+                    },
+                    {
+                        "format": "ICPC",
+                        "name": "Little Elephant and Array",
+                        "solved": false,
+                        "url": "https://codeforces.com/contest/220/problem/B"
+                    }
+                ],
+                "solvedProblems": 0,
+                "title": "Square Root Decomposition Practice Problems",
+                "totalProblems": 2
             }
         }
     }
