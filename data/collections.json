@@ -12,6 +12,7 @@
                 "problems": [
                     {
                         "format": "IOI",
+                        "important": false,
                         "name": "Convex Hull",
                         "score": 0,
                         "solved": false,
@@ -33,6 +34,7 @@
                 "problems": [
                     {
                         "format": "IOI",
+                        "important": false,
                         "name": "Sonya",
                         "score": 0,
                         "solved": false,
@@ -41,6 +43,7 @@
                     },
                     {
                         "format": "IOI",
+                        "important": true,
                         "name": "Safety",
                         "score": 0,
                         "solved": false,
@@ -49,6 +52,7 @@
                     },
                     {
                         "format": "IOI",
+                        "important": false,
                         "name": "Fireworks",
                         "score": 0,
                         "solved": false,
@@ -70,6 +74,7 @@
                 "problems": [
                     {
                         "format": "IOI",
+                        "important": false,
                         "name": "Fenwick Tree",
                         "score": 100,
                         "solved": true,
@@ -78,6 +83,7 @@
                     },
                     {
                         "format": "ICPC",
+                        "important": false,
                         "name": "Little Elephant and Array",
                         "score": 0,
                         "solved": false,
@@ -86,6 +92,7 @@
                     },
                     {
                         "format": "IOI",
+                        "important": true,
                         "name": "Jakarta Skyscrapers",
                         "score": 0,
                         "solved": false,

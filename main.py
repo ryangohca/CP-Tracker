@@ -194,6 +194,7 @@ def addCollection():
             currProblem['format'] = request.form["problemFormat-" + number]
             currProblem['solved'] = prevProblems[currProblem['url']]['solved'] if currProblem['url'] in prevProblems else False
             currProblem['status'] = prevProblems[currProblem['url']]['status'] if currProblem['url'] in prevProblems else 'Unattempted'
+            currProblem['important'] = prevProblems[currProblem['url']]['important'] if currProblem['url'] in prevProblems else False
             if currProblem['format'] == "IOI":
                 currProblem['score'] = prevProblems[currProblem['url']]['score'] if currProblem['url'] in prevProblems else 0
             else:

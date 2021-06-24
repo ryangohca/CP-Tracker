@@ -46,7 +46,7 @@ function normaliseCardLength(cardLength){
     }
 }
 var idx = 0;
-const idRegex = /^(.*?)(\d+)$/i;
+const idRegex = /^(.*?)(\d+)$/i; // used to detect <idName><num> so that we can increase num by 1 for every new element.
 
 function getLargestProblemIndex(modalId){
     var elems = document.querySelectorAll("#" + modalId + " div div form table tbody .clonedInput");
@@ -121,6 +121,29 @@ function remove(){
     toggleDelete(deleteButtons, currProblemLength);
 }
 
+/* The TODO table and the other problems table has the same problems row, but only those relevant are shown.
+To "move" from TODO table to other problem or vice versa, we just need to swap the visibility of these rows.
+*/
+function swapTODOAndOthers(rowClass){
+    for (var elem of document.getElementsByClassName(rowClass)){
+        if (elem.classList.length == 2) elem.classList.remove("invisibleAfterLoad")
+        else elem.classList.add("invisibleAfterLoad");
+    }
+}
+
+const trRegex = /^(.*?)Tr(\d+)$/i; // detects <idName>Tr<num>
+
+function addToTODO(){
+    var currRow = this.parentElement.parentElement; // tree is from td -> tr -> button
+    var rowClass = currRow.classList[0];
+    swapTODOAndOthers(rowClass);
+    var matches = rowClass.match(trRegex);
+    // id of hidden form to update importance is <idName>isImportant<num>
+    var idImportance = matches[1] + "isImportant" + matches[2];
+    console.log(idImportance);
+    document.getElementById(idImportance).value = "True"; 
+}
+
 const cardLength = 360;
 window.onload = function(){
     openCollectionsTab("publicCollectionsDiv");
@@ -129,6 +152,9 @@ window.onload = function(){
     }
     for (var elem of document.getElementsByClassName("remove")){
         elem.onclick = remove;
+    }
+    for (var elem of document.getElementsByClassName("addToTODO")){
+        elem.onclick = addToTODO;
     }
 }
 

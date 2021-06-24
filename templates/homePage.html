@@ -126,16 +126,14 @@
     <p> *Collection ID is an unique identifier for your collection. <b> It cannot be changed after creation of collection, and will be renamed arbitrarily if the ID already exists in server. </b> To prevent this, please check that your ID has not already been taken <a href="/dummy">here</a>.</p>
 {% endmacro %}
 
-{% macro createVerdictDropdown(possibleVerdictChoices, currChoice, idx) %}
-    <select name="problemVerdict-{{idx}}">
-        {% for verdict in possibleVerdictChoices %}
-            {% if verdict == currChoice %}
-                <option value="{{verdict}}" selected> {{verdict}} </option>
-            {% else %}
-                <option value="{{verdict}}"> {{verdict}} </option>
-            {% endif %}
-        {% endfor %}
-    </select>
+{% macro createVerdictChoices(possibleVerdictChoices, currChoice) %}
+    {% for verdict in possibleVerdictChoices %}
+        {% if verdict == currChoice %}
+            <option value="{{verdict}}" selected> {{verdict}} </option>
+        {% else %}
+            <option value="{{verdict}}"> {{verdict}} </option>
+        {% endif %}
+    {% endfor %}
 {% endmacro %}
 
 {% block otherLinks %}
@@ -212,7 +210,7 @@
         <h3> Create New Collection </h3>
         <form action="{{ url_for('addCollection') }}" method="POST" class="collectionForm w3-container">
             {{createProblemCollectionsForm({})}}
-            <button id="submitNewCollection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Create Collection </button>
+            <button type="submit" id="submitNewCollection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Create Collection </button>
         </form>
       </div>
     </div>
@@ -228,7 +226,7 @@
                 <h3> Edit Collection </h3>
                 <form action="{{ url_for('addCollection') }}" method="POST" class="collectionForm w3-container">
                     {{createProblemCollectionsForm(value)}}
-                    <button id="submit{{key}}Collection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Save Collection </button>
+                    <button type="submit" id="submit{{key}}Collection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Save Collection </button>
                 </form>
             </div>
         </div>
@@ -242,12 +240,11 @@
         <div class="w3-modal-content">
             <div class="w3-container">
                 <span onclick="closeModal('{{key}}Modal');" class="w3-button w3-display-topright">&times;</span>
-                <form action="/dummy" method="POST" class="updateProblemsForm w3-container">
-                    <!-- used for identify which collection is this at server side -->
-                    <input type='hidden' name='collectionID' value="{{value['id']}}">
+                <div class="updateProblemsForm w3-container">
                     <h3> {{value['title']}} </h3>
                     <h5> Description: </h5>
-                    <div id="{{key}}CollectionDescription" class="w3-container w3-border collectionDescription">{{value['description']}}</div>
+                    <div class="w3-container w3-border collectionDescription">{{value['description']}}</div>
+                    <label> TODO Problems </label>
                     <table class="w3-table-all problemsTable">
                         <thead>
                             <tr class="w3-white"> 
@@ -261,17 +258,59 @@
                         <tbody>
                             {% for i in range(value['problems']|length) %}
                                 {% set problem = value['problems'][i] %}
-                                <tr>
+                                <tr class="{{key}}Tr{{i}}{% if problem['important'] is sameas false %} invisibleAfterLoad{% endif %}" >
                                     <td class="nameField"> {{problem['name']}} </td>
                                     <td class="urlLink"> <a href="{{problem['url']}}"> {{problem['url']}} </a> </td>
-                                    <td class="verdictField"> {{createVerdictDropdown(allVerdicts, problem['status'], i)}} </td>
+                                    <td class="verdictField">
+                                        <select name="problemVerdict-{{i}}" class="{{key}}Verdict{{i}}">
+                                            {{createVerdictChoices(allVerdicts, problem['status'])}}
+                                        </select>
+                                    </td>
                                     {% if problem['format'] == "IOI" %}
                                         <td class="scoreField"> 
-                                            <input type="number" value="{{problem['score']}}" name="score-{{i}}">
+                                            <input type="number" value="{{problem['score']}}" name="score-{{i}}" class="{{key}}Score{{i}}">
                                         </td>
                                     {% else %}
                                         <td class="scoreField"> 
-                                            <input type="text" value="N.A." name="score-{{i}}" readonly>
+                                            <input type="text" value="N.A." name="score-{{i}}" class="{{key}}Score{{i}}" readonly>
+                                        </td>
+                                    {% endif %}
+                                    <td class="buttonField">
+                                        <button type="button" class="w3-button removeFromTODO">-</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <label> Other Problems </label>
+                    <table class="w3-table-all problemsTable">
+                        <thead>
+                            <tr class="w3-white"> 
+                                <th class="nameField"> Problem Name </th>
+                                <th class="urlLink"> Problem Link </th>
+                                <th> Problem Verdict </th>
+                                <th class="scoreField"> Score </th>
+                                <th class="buttonField"> Add to TODO </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in range(value['problems']|length) %}
+                                {% set problem = value['problems'][i] %}
+                                <tr class="{{key}}Tr{{i}}{% if problem['important'] is sameas true %} invisibleAfterLoad{% endif %}">
+                                    <td class="nameField"> {{problem['name']}} </td>
+                                    <td class="urlLink"> <a href="{{problem['url']}}"> {{problem['url']}} </a> </td>
+                                    <td class="verdictField">
+                                        <select name="problemVerdict-{{i}}" class="{{key}}Verdict{{i}}">
+                                            {{createVerdictChoices(allVerdicts, problem['status'])}}
+                                        </select>
+                                    </td>
+                                    {% if problem['format'] == "IOI" %}
+                                        <td class="scoreField"> 
+                                            <input type="number" value="{{problem['score']}}" name="score-{{i}}" class="{{key}}Score{{i}}">
+                                        </td>
+                                    {% else %}
+                                        <td class="scoreField"> 
+                                            <input type="text" value="N.A." name="score-{{i}}" class="{{key}}Score{{i}}" readonly>
                                         </td>
                                     {% endif %}
                                     <td class="buttonField">
@@ -281,7 +320,23 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                </form>
+                    <form action="/dummy" method="POST">
+                        <!-- this would be the actual form that would be submitted. Values from visible 'form' earlier will be updated here
+                        for submission. This is because we have 2 separate forms: 1 for "important (TODO)" problems, and the other to hold
+                        other problems, but we can only submit one unique set of problem data. --> 
+                        <!-- used for identify which collection is this at server side -->
+                        <input type='hidden' name='collectionID' value="{{value['id']}}">
+                        {% for i in range(value['problems']|length) %}
+                            {% set problem = value['problems'][i] %}
+                            <select name="problemVerdict-{{i}}" class="{{key}}Verdict{{i}}" style="display:none;"> 
+                                {{createVerdictChoices(allVerdicts, problem['status'])}}
+                            </select>
+                            <input type="text" value="N.A." name="score-{{i}}" class="{{key}}Score{{i}}" style="display:none;">
+                            <input type="text" value="{{problem['important']}}" name="isImportant-{{i}}" id="{{key}}isImportant{{i}}" style="display:none;">
+                        {% endfor %}
+                        <button type="submit" class="w3-button w3-right w3-green submitCollection"> Update Problem List </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
