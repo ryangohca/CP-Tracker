@@ -4,8 +4,8 @@
     <div class="flexcontainer">
         <div class="titlefield">
             <label for='collectionTitle'> Title: </label>
-            {% if 'collectionTitle' in data %}
-                <input class="w3-input w3-border" id={{data['id'] + '-collectionTitle'}} name='collectionTitle' type="text" value={{data['title']}} maxlength="50" required>
+            {% if 'title' in data %}
+                <input class="w3-input w3-border" id="{{data['id'] + '-collectionTitle'}}" name='collectionTitle' type="text" value="{{data['title']}}" maxlength="50" required>
             {% else %}
                 <input class="w3-input w3-border" id='newCollectionTitle' name="collectionTitle" type="text" maxlength="50" required>
             {% endif %}
@@ -13,20 +13,20 @@
         <div class="idfield">
             <label for='collectionID'> Collection ID*: </label>
             {% if 'id' in data %}
-                <input class="w3-input w3-border" id={{data['id'] + '-id'}} name='collectionID' type="text" value={{data['id']}} required disabled>
+                <input class="w3-input w3-border" id="{{data['id'] + '-id'}}" name='collectionID' type="text" value="{{data['id']}}" required readonly>
             {% else %}
                 <input class="w3-input w3-border" id='newCollectionID' name="collectionID" type="text" required>
             {% endif %}
         </div>
     </div>
     {% if 'id' in data %}
-        <input id={{data['id'] + '-idPrefilled'}} name='idPrefilled' type="hidden" value="true">
+        <input id="{{data['id'] + '-idPrefilled'}}" name='idPrefilled' type="hidden" value="true">
     {% else %}
         <input id='newIdPrefilled' name='idPrefilled' type="hidden" value="false">
     {% endif %}
     <label for='description'> Description: </label>
     {% if 'description' in data %}
-        <textarea id={{data['id'] + '-description'}} name='description'> {{data['description']}} </textarea>
+        <textarea id="{{data['id'] + '-description'}}" name='description'> {{data['description']}} </textarea>
     {% else %}
         <textarea id="newDescription" name="description"> </textarea>
     {% endif %}
@@ -41,7 +41,34 @@
             </tr>
         </thead>
         {% if 'problems' in data %}
-            <!-- cry.............. -->
+            <tbody>
+                {% for i in range(data['problems']|length) %}
+                <tr id="{{data['id']}}ClonedInput{{i}}" class="clonedInput">
+                    <td>
+                        <input required type="text" value="{{data['problems'][i]['name']}}" id="{{data['id']}}ProblemName-{{i}}" name="problemName-{{i}}" class="form-control" placeholder="Name">
+                    </td>
+                    <td>
+                        <input required type="url" value="{{data['problems'][i]['url']}}" id="{{data['id']}}ProblemUrl-{{i}}" name="problemUrl-{{i}}" class="form-control" placeholder="https://codeforces.com/">
+                    </td>
+                    <td>
+                        <select id="{{data['id']}}ProblemFormat-{{i}}" name="problemFormat-{{i}}">
+                            {% set problemFormat = data['problems'][i]['format'] %}
+                            {% if problemFormat == "IOI" %}
+                                <option value="IOI" selected> IOI </option>
+                                <option value="ICPC"> ICPC </option>
+                            {% else %}
+                                <option value="IOI"> IOI </option>
+                                <option value="ICPC" selected> ICPC </option>
+                            {% endif %}
+                        </select>
+                    </td>
+                    <td>
+                        <button id="{{data['id']}}btnAdd-{{i}}" name="btnAdd-{{i}}" type="button" class="w3-button clone">+</button>
+                        <button id="{{data['id']}}btnDel-{{i}}" name="btnDel-{{i}}" type="button" class="w3-button remove">-</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         {% else %}
             <tbody>
                 <tr id="newClonedInput0" class="clonedInput">
@@ -67,9 +94,9 @@
     </table>
     {% if 'isPublic' in data %}
         {% if data['isPublic'] is sameas true %}
-            <input type="checkbox" id={{data['id'] + "-publicCheckbox"}} name="publicCheckbox" value="public" checked>
+            <input type="checkbox" id="{{data['id'] + '-publicCheckbox'}}" name="publicCheckbox" value="public" checked>
         {% else %}
-            <input type="checkbox" id={{data['id'] + "-publicCheckbox"}} name="publicCheckbox" value="public">
+            <input type="checkbox" id="{{data['id'] + '-publicCheckbox'}}" name="publicCheckbox" value="public">
         {% endif %}
     {% else %}
         <input type="checkbox" id="newPublicCheckbox" name="publicCheckbox" value="public">
@@ -97,7 +124,7 @@
         <div class="cardcontainer flexcontainer">
             {% for key in orderKey %}
                 {% set value = myCollections[key] %}
-                <button class="w3-card-4 collectionCard">
+                <button class="w3-card-4 collectionCard" onclick='openModal("{{key}}modal")'>
                     <div class="h3-container w3-gray card-header">
                         <h5 class="card-title"> {{value['title']}} </h5>
                     </div>
@@ -142,4 +169,19 @@
       </div>
     </div>
 </div>
+{% for key in orderKey %}
+    {% set value = myCollections[key] %}
+    <div id="{{key}}modal" class="w3-modal">
+        <div class="w3-modal-content">
+            <div class="w3-container">
+                <span onclick="closeModal('{{key}}modal');" class="w3-button w3-display-topright">&times;</span>
+                <h3> Edit Collection </h3>
+                <form action="{{ url_for('addCollection') }}" method="POST" class="collectionForm w3-container">
+                    {{createProblemCollectionsForm(value)}}
+                    <button id="submit{{key}}Collection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Save Collection </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endfor %}
 {% endblock %}
