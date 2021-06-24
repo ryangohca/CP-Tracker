@@ -1,7 +1,9 @@
 {% extends "template.html" %}
 
 {% macro createProblemCollectionsForm(data) %}
+    <!-- All these field autofills with the collection data for already created collections -->
     <div class="flexcontainer">
+        <!-- Collection Title Field -->
         <div class="titlefield">
             <label for='collectionTitle'> Title: </label>
             {% if 'title' in data %}
@@ -10,26 +12,36 @@
                 <input class="w3-input w3-border" id='newCollectionTitle' name="collectionTitle" type="text" maxlength="50" required>
             {% endif %}
         </div>
+
+        <!-- Collection ID field -->
         <div class="idfield">
             <label for='collectionID'> Collection ID*: </label>
             {% if 'id' in data %}
+                <!-- Collection ID can never be changed once created - to ensure integrity of the json data -->
                 <input class="w3-input w3-border" id="{{data['id'] + '-id'}}" name='collectionID' type="text" value="{{data['id']}}" required readonly>
             {% else %}
                 <input class="w3-input w3-border" id='newCollectionID' name="collectionID" type="text" required>
             {% endif %}
         </div>
     </div>
+
+    <!-- hidden flag to tell the server code whether to add a new ID to the server or not -->
     {% if 'id' in data %}
         <input id="{{data['id'] + '-idPrefilled'}}" name='idPrefilled' type="hidden" value="true">
     {% else %}
         <input id='newIdPrefilled' name='idPrefilled' type="hidden" value="false">
     {% endif %}
+
+    <!-- Collection Description -->
     <label for='description'> Description: </label>
     {% if 'description' in data %}
         <textarea id="{{data['id'] + '-description'}}" name='description' class="w3-input w3-border">{{data['description']}}</textarea>
     {% else %}
         <textarea id="newDescription" name="description"></textarea>
     {% endif %}
+
+    <!-- Collection Problems -->
+    <!-- Note that any ID/Name for the fields of any problem must follow the following format: <name><number> -->
     <label> Problem(s) </label>
     <table class="w3-table-all problemsTable">
         <thead>
@@ -47,9 +59,11 @@
                     <td>
                         <input required type="text" value="{{data['problems'][i]['name']}}" id="{{data['id']}}ProblemName-{{i}}" name="problemName-{{i}}" class="form-control" placeholder="Name">
                     </td>
+
                     <td>
                         <input required type="url" value="{{data['problems'][i]['url']}}" id="{{data['id']}}ProblemUrl-{{i}}" name="problemUrl-{{i}}" class="form-control" placeholder="https://codeforces.com/">
                     </td>
+
                     <td>
                         <select id="{{data['id']}}ProblemFormat-{{i}}" name="problemFormat-{{i}}">
                             {% set problemFormat = data['problems'][i]['format'] %}
@@ -62,6 +76,7 @@
                             {% endif %}
                         </select>
                     </td>
+
                     <td>
                         <button id="{{data['id']}}btnAdd-{{i}}" name="btnAdd-{{i}}" type="button" class="w3-button clone">+</button>
                         <button id="{{data['id']}}btnDel-{{i}}" name="btnDel-{{i}}" type="button" class="w3-button remove">-</button>
@@ -75,15 +90,18 @@
                     <td>
                         <input required type="text" value="" id="newProblemName-0" name="problemName-0" class="form-control" placeholder="Name">
                     </td>
+
                     <td>
                         <input required type="url" value="" id="newProblemUrl-0" name="problemUrl-0" class="form-control" placeholder="https://codeforces.com/">
                     </td>
+
                     <td>
                         <select id="newProblemFormat-0" name="problemFormat-0">
                             <option value="IOI"> IOI </option>
                             <option value="ICPC"> ICPC </option>
                         </select>
                     </td>
+
                     <td>
                         <button id="btnAdd-0" name="btnAdd-0" type="button" class="w3-button clone">+</button>
                         <button id="btnDel-0" name="btnDel-0" type="button" class="w3-button remove">-</button>
@@ -92,6 +110,8 @@
             </tbody>
         {% endif %}
     </table>
+
+    <!-- Checkbox - allows users to choose whether they want to show their collections to the public. Default is False. -->
     {% if 'isPublic' in data %}
         {% if data['isPublic'] is sameas true %}
             <input type="checkbox" id="{{data['id'] + '-publicCheckbox'}}" name="publicCheckbox" value="public" checked>
@@ -102,6 +122,7 @@
         <input type="checkbox" id="newPublicCheckbox" name="publicCheckbox" value="public">
     {% endif %}
     <label for="publicCheckbox"> Add Collection to Public </label>
+
     <p> *Collection ID is an unique identifier for your collection. <b> It cannot be changed after creation of collection, and will be renamed arbitrarily if the ID already exists in server. </b> To prevent this, please check that your ID has not already been taken <a href="/dummy">here</a>.</p>
 {% endmacro %}
 
@@ -113,29 +134,39 @@
 {% block body %}
 <h2 class="maintitle"> My Collections </h2>
 <div id="collections">
+    <!-- tab links -->
     <div class="flexcontainer" id="collectionstab">
         <button class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openCollectionsTab("publicCollectionsDiv");'> Public Collections </button>
         <button class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openCollectionsTab("myCollectionsDiv");'> My Collections </button>
     </div>
+
+    <!-- content in the 'Public Collections' tab -->
     <div id="publicCollectionsDiv" class="w3-border collectionscontainer">
         <p> To be added </p>
     </div>
+
+    <!-- content in the 'My Collections' tab -->
     <div id="myCollectionsDiv" class="w3-border collectionscontainer">
         <div class="cardcontainer flexcontainer">
+            <!-- Collections -->
             {% for key in orderKey %}
                 {% set value = myCollections[key] %}
-                <button class="w3-card-4 collectionCard" onclick='openModal("{{key}}modal")'>
+                <button class="w3-card-4 collectionCard" onclick='openModal("{{key}}Modal")'>
                     <div class="h3-container w3-gray card-header">
                         <h5 class="card-title"> {{value['title']}} </h5>
                     </div>
+
                     <div class="w3-light-gray w3-border card-progress-bar">
                         {% set percentage = (value['solvedProblems'] / value['totalProblems'] * 100)|round|int %}
                         <div class="w3-green w3-text-black" style="width: {{percentage}}%">{{percentage}}%</div>
                     </div>
+
                     <div class="card-desc">{{value['shortDescription']}}</div>
+
                     <div class="card-created"> 
                         <p> <b> Created on: </b> {{value['createdDate']}} </p>
                     </div>
+
                     <div class="card-shared"> 
                         <p> 
                             <b> Shared: </b> 
@@ -148,6 +179,7 @@
                     </div>
                 </button>
             {% endfor %}
+            <!-- Add New Collections -->
             <button class="w3-card-4 collectionCard" onclick="openModal('addcollectionmodal')">
                 <div class="signtextgroup">
                     <div class="w3-border addsign"> <p class="addsigntext"> + </p> </div>
@@ -157,6 +189,10 @@
         </div>
     </div>
 </div>
+
+<!-- Modals -->
+
+<!-- Modal specifically to add a new collection --> 
 <div id="addcollectionmodal" class="w3-modal">
     <div class="w3-modal-content">
       <div class="w3-container">
@@ -169,17 +205,34 @@
       </div>
     </div>
 </div>
+
+<!-- Modals for user to change their collection settings -->
 {% for key in orderKey %}
     {% set value = myCollections[key] %}
-    <div id="{{key}}modal" class="w3-modal">
+    <div id="{{key}}SettingsModal" class="w3-modal">
         <div class="w3-modal-content">
             <div class="w3-container">
-                <span onclick="closeModal('{{key}}modal');" class="w3-button w3-display-topright">&times;</span>
+                <span onclick="closeModal('{{key}}SettingsModal');" class="w3-button w3-display-topright">&times;</span>
                 <h3> Edit Collection </h3>
                 <form action="{{ url_for('addCollection') }}" method="POST" class="collectionForm w3-container">
                     {{createProblemCollectionsForm(value)}}
                     <button id="submit{{key}}Collection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Save Collection </button>
                 </form>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+<!-- Modals to show users their problem collections, and to update their progress in their problems. -->
+{% for key in orderKey %}
+    {% set value = myCollections[key] %}
+    <div id="{{key}}Modal" class="w3-modal">
+        <div class="w3-modal-content">
+            <div class="w3-container">
+                <span onclick="closeModal('{{key}}Modal');" class="w3-button w3-display-topright">&times;</span>
+                <h3> {{value['title']}} </h3>
+                <h5> Description: </h5>
+                <div id="{{key}}CollectionDescription" class="w3-container w3-border collectionDescription">{{value['description']}}</div>
             </div>
         </div>
     </div>

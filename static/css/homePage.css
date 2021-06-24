@@ -47,6 +47,7 @@
     align-items: center;
     height: 100%;
 }
+
 .addsign{
     position: relative;
     width: 100px;
@@ -70,11 +71,11 @@
     margin: 5px;
 }
 
+/* to align submit button with the textboxes */
 .collectionForm .submitCollection{
     margin-right: 0px;
 }
 
-/* to align submit button with the textboxes */
 .collectionForm textarea{
     width: 100%;
     height: 80px;
@@ -123,4 +124,10 @@
 
 .remove{
     background-color: red;
+}
+
+.collectionDescription{
+    height: 100px;
+    overflow-y: auto;
+    margin: 10px 0px;
 }
