@@ -13,11 +13,14 @@
                     {
                         "format": "IOI",
                         "name": "Convex Hull",
+                        "score": 0,
                         "solved": false,
+                        "status": "Unattempted",
                         "url": "https://codebreaker.xyz/problem/convexhull"
                     }
                 ],
                 "publishedDate": "23/06/2021",
+                "shortDescription": "Slopes                                                                                                                                                ",
                 "solvedProblems": 0,
                 "title": "Convex Hull Practice Problems",
                 "totalProblems": 1
@@ -31,53 +34,67 @@
                     {
                         "format": "IOI",
                         "name": "Sonya",
+                        "score": 0,
                         "solved": false,
+                        "status": "Unattempted",
                         "url": "https://codebreaker.xyz/problem/sonya"
                     },
                     {
                         "format": "IOI",
                         "name": "Safety",
+                        "score": 0,
                         "solved": false,
+                        "status": "Unattempted",
                         "url": "https://codebreaker.xyz/problem/safety"
                     },
                     {
                         "format": "IOI",
                         "name": "Fireworks",
+                        "score": 0,
                         "solved": false,
+                        "status": "Unattempted",
                         "url": "https://oj.uz/problem/view/APIO16_fireworks"
                     }
                 ],
                 "publishedDate": null,
+                "shortDescription": "Slope Trick Practice                                                                                                                                  ",
                 "solvedProblems": 0,
                 "title": "Slope Trick Practice Problems",
                 "totalProblems": 3
             },
             "sqrtdecomp": {
                 "createdDate": "23/06/2021",
-                "description": "return abort(503, \"Access Denied\")",
+                "description": "return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\")\r\n\r\nreturn true;",
                 "id": "sqrtdecomp",
                 "isPublic": true,
                 "problems": [
                     {
                         "format": "IOI",
                         "name": "Fenwick Tree",
+                        "score": 100,
                         "solved": true,
+                        "status": "Accepted",
                         "url": "https://codebreaker.xyz/problem/fenwicktree"
                     },
                     {
                         "format": "ICPC",
                         "name": "Little Elephant and Array",
+                        "score": 0,
                         "solved": false,
+                        "status": "Unattempted",
                         "url": "https://codeforces.com/contest/220/problem/B"
                     },
                     {
                         "format": "IOI",
                         "name": "Jakarta Skyscrapers",
+                        "score": 0,
                         "solved": false,
+                        "status": "Unattempted",
                         "url": "https://codebreaker.xyz/problem/skyscraper_apio15"
                     }
                 ],
                 "publishedDate": "23/06/2021",
+                "shortDescription": "return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return ...",
                 "solvedProblems": 1,
                 "title": "Square Root Decomposition Practice Problems",
                 "totalProblems": 3

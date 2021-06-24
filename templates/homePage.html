@@ -26,7 +26,7 @@
     {% endif %}
     <label for='description'> Description: </label>
     {% if 'description' in data %}
-        <textarea id="{{data['id'] + '-description'}}" name='description'>{{data['description']}}</textarea>
+        <textarea id="{{data['id'] + '-description'}}" name='description' class="w3-input w3-border">{{data['description']}}</textarea>
     {% else %}
         <textarea id="newDescription" name="description"></textarea>
     {% endif %}
@@ -130,9 +130,9 @@
                     </div>
                     <div class="w3-light-gray w3-border card-progress-bar">
                         {% set percentage = (value['solvedProblems'] / value['totalProblems'] * 100)|round|int %}
-                        <div class="w3-green w3-text-black" style="width: {{percentage}}%"> {{percentage}}% </div>
+                        <div class="w3-green w3-text-black" style="width: {{percentage}}%">{{percentage}}%</div>
                     </div>
-                    <div class="card-desc"> {{value['description']}} </div>
+                    <div class="card-desc">{{value['shortDescription']}}</div>
                     <div class="card-created"> 
                         <p> <b> Created on: </b> {{value['createdDate']}} </p>
                     </div>

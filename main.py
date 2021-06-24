@@ -158,6 +158,9 @@ def addCollection():
     currCollection['title'] = request.form['collectionTitle']
     currCollection['id'] = collectionID
     currCollection['description'] = request.form['description']
+    currCollection['shortDescription'] = currCollection['description'].split("\r\n")[0] # we only consider the very first line for short descriptions
+    if len(currCollection['shortDescription']) > 147: # must be at most 150 characters including the ellipsis
+        currCollection['shortDescription'] = currCollection['shortDescription'][:147] + "..."
     if 'publicCheckbox' in request.form:
         currCollection['isPublic'] = True
         if 'publishedDate' in allUsersCollections[loginUser]['collections'][collectionID] and allUsersCollections[loginUser]['collections'][collectionID]['publishedDate'] is not None:
@@ -175,7 +178,7 @@ def addCollection():
         currCollection['createdDate'] = allUsersCollections[loginUser]['collections'][collectionID]['createdDate']
     else:
         currCollection['createdDate'] = date.today().strftime("%d/%m/%Y")
-    regex = re.compile("^(.*)(\d)+$")
+    regex = re.compile("^(.*?)(\d)+$")
     currCollection['problems'] = []
     solvedProblems = 0
     for name in request.form:
@@ -186,6 +189,8 @@ def addCollection():
             currProblem['url'] = request.form["problemUrl-" + number]
             currProblem['format'] = request.form["problemFormat-" + number]
             currProblem['solved'] = prevProblems[currProblem['name']]['solved'] if currProblem['name'] in prevProblems else False
+            currProblem['status'] = prevProblems[currProblem['name']]['status'] if currProblem['name'] in prevProblems else 'Unattempted'
+            currProblem['score'] = prevProblems[currProblem['name']]['score'] if currProblem['name'] in prevProblems else 0
             if currProblem['solved']:
                 solvedProblems += 1
             currCollection['problems'].append(currProblem)

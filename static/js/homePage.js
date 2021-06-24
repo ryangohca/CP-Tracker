@@ -16,6 +16,7 @@ function normaliseCardLength(cardLength){
     var expectedCards = Math.round(containerLen / cardLength);
     var maxHeight = 0;
     var maxTitleHeight = 0;
+    var maxDescHeight = 0;
     for (var content of document.getElementsByClassName("collectionCard")) {
         if (content.parentElement.parentElement.style.display === 'none') continue;
         content.style.width = (containerLen / expectedCards) - 30 + "px"; // 30px offset because of margin
@@ -25,6 +26,11 @@ function normaliseCardLength(cardLength){
             var actualTitleHeight = title[0].getElementsByClassName("card-title")[0].offsetHeight;
             maxTitleHeight = Math.max(actualTitleHeight, maxTitleHeight);
         }
+        var desc = content.getElementsByClassName("card-desc")
+        if (desc.length !== 0){
+            var actualDescHeight = desc[0].offsetHeight;
+            maxDescHeight = Math.max(actualDescHeight, maxDescHeight);
+        }
     }
     for (var content of document.getElementsByClassName("collectionCard")) {
         if (content.parentElement.parentElement.style.display === 'none') continue;
@@ -32,6 +38,10 @@ function normaliseCardLength(cardLength){
         var title = content.getElementsByClassName("card-header");
         if (title.length !== 0){
             title[0].style.height = maxTitleHeight + "px";
+        }
+        var desc = content.getElementsByClassName("card-desc");
+        if (desc.length !== 0){
+            desc[0].style.height = maxDescHeight + "px";
         }
     }
 }

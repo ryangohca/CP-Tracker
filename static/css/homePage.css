@@ -91,6 +91,10 @@
     margin-left: 2px;
 }
 
+.collectionForm .idfield input:read-only{
+    color: rgb(194, 189, 168);
+}
+
 .problemsTable{
     width: 100%;
 }
