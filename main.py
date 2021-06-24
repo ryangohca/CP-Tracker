@@ -11,6 +11,7 @@ loginUser = None  #Is there a better way?
 PASSWORD_FILE = "data/passwords.json"
 COLLECTIONS_FILE = "data/collections.json"
 IDNAME_FILE = "data/idNames.json"
+ALL_PROBLEM_VERDICTS = ["Unattempted", "Wrong Answer", "Accepted", "Time Limit Exceeded", "Memory Limit Exceeded", "Runtime Error", "Theory Solved", "Query Limit Exceeded", "Presentation Error"]
 
 def userNotExist(form, field):
     username = field.data.strip()
@@ -76,8 +77,8 @@ def success():
         myCollections = json.load(f)[loginUser]["collections"]
     orderKey = sorted(myCollections, key=lambda x: datetime.strptime(myCollections[x]["createdDate"], "%d/%m/%Y"))
     if 'warning' in request.args:
-        return render_template("homePage.html", warning=request.args['warning'], myCollections=myCollections, orderKey=orderKey)
-    return render_template("homePage.html", myCollections=myCollections, orderKey=orderKey)
+        return render_template("homePage.html", warning=request.args['warning'], myCollections=myCollections, orderKey=orderKey, allVerdicts=ALL_PROBLEM_VERDICTS)
+    return render_template("homePage.html", myCollections=myCollections, orderKey=orderKey, allVerdicts=ALL_PROBLEM_VERDICTS)
 
 @app.route("/logout")
 def logout():
@@ -171,7 +172,10 @@ def addCollection():
         currCollection['isPublic'] = False
         currCollection["publishedDate"] = None
     if 'problems' in allUsersCollections[loginUser]['collections'][collectionID]:
-        prevProblems = {problem['name']: problem for problem in allUsersCollections[loginUser]['collections'][collectionID]['problems']}
+        # Why url but not name? There could be 2 problems with the same name, 
+        # but unlikely to have 2 different problems to have the same url.
+        # So url is a better 'id'.
+        prevProblems = {problem['url']: problem for problem in allUsersCollections[loginUser]['collections'][collectionID]['problems']}
     else:
         prevProblems = {}
     if 'createdDate' in allUsersCollections[loginUser]['collections'][collectionID]:
@@ -188,9 +192,12 @@ def addCollection():
             currProblem['name'] = request.form["problemName-" + number]
             currProblem['url'] = request.form["problemUrl-" + number]
             currProblem['format'] = request.form["problemFormat-" + number]
-            currProblem['solved'] = prevProblems[currProblem['name']]['solved'] if currProblem['name'] in prevProblems else False
-            currProblem['status'] = prevProblems[currProblem['name']]['status'] if currProblem['name'] in prevProblems else 'Unattempted'
-            currProblem['score'] = prevProblems[currProblem['name']]['score'] if currProblem['name'] in prevProblems else 0
+            currProblem['solved'] = prevProblems[currProblem['url']]['solved'] if currProblem['url'] in prevProblems else False
+            currProblem['status'] = prevProblems[currProblem['url']]['status'] if currProblem['url'] in prevProblems else 'Unattempted'
+            if currProblem['format'] == "IOI":
+                currProblem['score'] = prevProblems[currProblem['url']]['score'] if currProblem['url'] in prevProblems else 0
+            else:
+                currProblem['score'] = '-'
             if currProblem['solved']:
                 solvedProblems += 1
             currCollection['problems'].append(currProblem)

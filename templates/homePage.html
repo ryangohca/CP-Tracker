@@ -126,6 +126,18 @@
     <p> *Collection ID is an unique identifier for your collection. <b> It cannot be changed after creation of collection, and will be renamed arbitrarily if the ID already exists in server. </b> To prevent this, please check that your ID has not already been taken <a href="/dummy">here</a>.</p>
 {% endmacro %}
 
+{% macro createVerdictDropdown(possibleVerdictChoices, currChoice, idx) %}
+    <select name="problemVerdict-{{idx}}">
+        {% for verdict in possibleVerdictChoices %}
+            {% if verdict == currChoice %}
+                <option value="{{verdict}}" selected> {{verdict}} </option>
+            {% else %}
+                <option value="{{verdict}}"> {{verdict}} </option>
+            {% endif %}
+        {% endfor %}
+    </select>
+{% endmacro %}
+
 {% block otherLinks %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/homePage.css') }}">
 <script src="{{ url_for('static', filename='js/homePage.js') }}"></script>
@@ -230,9 +242,46 @@
         <div class="w3-modal-content">
             <div class="w3-container">
                 <span onclick="closeModal('{{key}}Modal');" class="w3-button w3-display-topright">&times;</span>
-                <h3> {{value['title']}} </h3>
-                <h5> Description: </h5>
-                <div id="{{key}}CollectionDescription" class="w3-container w3-border collectionDescription">{{value['description']}}</div>
+                <form action="/dummy" method="POST" class="updateProblemsForm w3-container">
+                    <!-- used for identify which collection is this at server side -->
+                    <input type='hidden' name='collectionID' value="{{value['id']}}">
+                    <h3> {{value['title']}} </h3>
+                    <h5> Description: </h5>
+                    <div id="{{key}}CollectionDescription" class="w3-container w3-border collectionDescription">{{value['description']}}</div>
+                    <table class="w3-table-all problemsTable">
+                        <thead>
+                            <tr class="w3-white"> 
+                                <th class="nameField"> Problem Name </th>
+                                <th class="urlLink"> Problem Link </th>
+                                <th> Problem Verdict </th>
+                                <th class="scoreField"> Score </th>
+                                <th class="buttonField"> Add to TODO </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in range(value['problems']|length) %}
+                                {% set problem = value['problems'][i] %}
+                                <tr>
+                                    <td class="nameField"> {{problem['name']}} </td>
+                                    <td class="urlLink"> <a href="{{problem['url']}}"> {{problem['url']}} </a> </td>
+                                    <td class="verdictField"> {{createVerdictDropdown(allVerdicts, problem['status'], i)}} </td>
+                                    {% if problem['format'] == "IOI" %}
+                                        <td class="scoreField"> 
+                                            <input type="number" value="{{problem['score']}}" name="score-{{i}}">
+                                        </td>
+                                    {% else %}
+                                        <td class="scoreField"> 
+                                            <input type="text" value="N.A." name="score-{{i}}" readonly>
+                                        </td>
+                                    {% endif %}
+                                    <td class="buttonField">
+                                        <button type="button" class="w3-button addToTODO">+</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </div>

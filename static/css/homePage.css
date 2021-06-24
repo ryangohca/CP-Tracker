@@ -67,7 +67,7 @@
     text-align: center;
 }
 
-.collectionForm > *{
+.collectionForm > *, .updateProblemsForm > *{
     margin: 5px;
 }
 
@@ -92,7 +92,7 @@
     margin-left: 2px;
 }
 
-.collectionForm .idfield input:read-only{
+input:read-only{
     color: rgb(194, 189, 168);
 }
 
@@ -105,7 +105,7 @@
     width: 100%;
 }
 
-.clone, .remove{
+.clone, .remove, .addToTODO, .removeFromTODO{
     height: 100%;
     width: 30px;
     color: white;
@@ -114,20 +114,49 @@
     padding: 1px;
 }
 
-.clone:hover, .remove:hover{
+.clone:hover, .remove:hover, .addToTODO:hover, .removeFromTODO:hover{
     cursor: pointer;
 }
 
-.clone{
+.clone, .addToTODO{
     background-color: rgb(33, 182, 33);
 }
 
-.remove{
+.remove, .removeFromTODO{
     background-color: red;
 }
 
 .collectionDescription{
     height: 100px;
     overflow-y: auto;
-    margin: 10px 0px;
+}
+
+.problemsTable{
+    table-layout: fixed;
+}
+
+.urlLink{
+    width: 30%;
+    overflow-x: auto;
+}
+
+.buttonField{
+    width: 10%;
+}
+
+.scoreField{
+    width: 12%;
+}
+
+.scoreField input{
+    width: 100%;
+}
+
+.nameField{
+    width: 20%;
+}
+
+.verdictField select{
+    width: 100%;
+    height: 100%;
 }
