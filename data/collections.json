@@ -14,17 +14,35 @@
                         "format": "IOI",
                         "important": false,
                         "name": "Convex Hull",
-                        "score": 0,
-                        "solved": false,
-                        "status": "Unattempted",
+                        "score": 100,
+                        "solved": true,
+                        "status": "Accepted",
                         "url": "https://codebreaker.xyz/problem/convexhull"
+                    },
+                    {
+                        "format": "IOI",
+                        "important": false,
+                        "name": "Jumping 2",
+                        "score": 100,
+                        "solved": true,
+                        "status": "Accepted",
+                        "url": "https://codebreaker.xyz/problem/jumping2"
+                    },
+                    {
+                        "format": "IOI",
+                        "important": false,
+                        "name": "Meme Magic",
+                        "score": 100,
+                        "solved": true,
+                        "status": "Accepted",
+                        "url": "https://codebreaker.xyz/problem/mememagic"
                     }
                 ],
                 "publishedDate": "23/06/2021",
-                "shortDescription": "Slopes                                                                                                                                                ",
-                "solvedProblems": 0,
+                "shortDescription": "Slopes",
+                "solvedProblems": 3,
                 "title": "Convex Hull Practice Problems",
-                "totalProblems": 1
+                "totalProblems": 3
             },
             "slopetrick": {
                 "createdDate": "29/05/2021",
