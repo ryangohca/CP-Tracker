@@ -198,7 +198,7 @@ def addCollection():
             if currProblem['format'] == "IOI":
                 currProblem['score'] = prevProblems[currProblem['url']]['score'] if currProblem['url'] in prevProblems else 0
             else:
-                currProblem['score'] = '-'
+                currProblem['score'] = 'N.A.'
             if currProblem['solved']:
                 solvedProblems += 1
             currCollection['problems'].append(currProblem)
@@ -211,4 +211,31 @@ def addCollection():
         return redirect(url_for('success', warning=warning))
     return redirect(url_for('success'))
     
+@app.route("/updateProblems", methods=["GET", "POST"])
+def updateProblems():
+    global loginUser
+    if loginUser is None:
+        return abort(503, "Access Denied")
+    collectionID = request.form["collectionID"];
+    # The problems did not change in order at all before the form is created or after the form is submitted
+    # so we can just safely loop through the problems in 'collectionID'
+    with open(COLLECTIONS_FILE) as f:
+        allUsersCollections = json.load(f)
+    problems = allUsersCollections[loginUser]['collections'][collectionID]['problems']
+    numProblemsSolved = 0
+    for i in range(len(problems)):
+        if problems[i]['format'] == "IOI":
+            allUsersCollections[loginUser]['collections'][collectionID]['problems'][i]['score'] = int(request.form['score-' + str(i)])
+        else:
+            allUsersCollections[loginUser]['collections'][collectionID]['problems'][i]['score'] = request.form['score-' + str(i)]
+        allUsersCollections[loginUser]['collections'][collectionID]['problems'][i]['status'] = request.form['problemVerdict-' + str(i)]
+        allUsersCollections[loginUser]['collections'][collectionID]['problems'][i]['important'] = request.form['isImportant-' + str(i)] == "True"
+        if request.form['problemVerdict-' + str(i)] == "Accepted":
+            allUsersCollections[loginUser]['collections'][collectionID]['problems'][i]['solved'] = True
+            numProblemsSolved += 1
+    allUsersCollections[loginUser]['collections'][collectionID]['solvedProblems'] = numProblemsSolved
+    with open(COLLECTIONS_FILE, 'w') as f:
+        json.dump(allUsersCollections, f, indent=4, sort_keys=True)
+    return redirect(url_for('success'))
+
 app.run(host="0.0.0.0", port=8080, debug=True)

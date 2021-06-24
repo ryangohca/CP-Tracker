@@ -66,12 +66,14 @@ function toggleDelete(removeButtonElems, currLength){
     }
 }
 
-function openModal(modalId){
+function openModal(modalId, problemLengthCanChange=false){
     document.getElementById(modalId).style.display='block';
-    idx = getLargestProblemIndex(modalId);
-    var currProblemLength = getNumProblems(modalId);
-    var removeButtons = document.querySelectorAll("#" + modalId + " div div form table tbody .clonedInput td .remove");
-    toggleDelete(removeButtons, currProblemLength);
+    if (problemLengthCanChange){
+        idx = getLargestProblemIndex(modalId);
+        var currProblemLength = getNumProblems(modalId);
+        var removeButtons = document.querySelectorAll("#" + modalId + " div div form table tbody .clonedInput td .remove");
+        toggleDelete(removeButtons, currProblemLength);
+    }
 }
 
 function closeModal(modalId){
@@ -107,7 +109,6 @@ function clone(){
     sampleRow.parentElement.appendChild(clonedElement);
     document.querySelector("#" + clonedElement.id + " td .clone").onclick = clone;
     document.querySelector("#" + clonedElement.id + " td .remove").onclick = remove;
-    console.log(sampleRow.parentElement.querySelectorAll(".clonedInput td .remove"));
     toggleDelete(sampleRow.parentElement.querySelectorAll(".clonedInput td .remove"), getNumProblems(this.closest(".w3-modal").id));
 }
 
@@ -133,15 +134,27 @@ function swapTODOAndOthers(rowClass){
 
 const trRegex = /^(.*?)Tr(\d+)$/i; // detects <idName>Tr<num>
 
-function addToTODO(){
-    var currRow = this.parentElement.parentElement; // tree is from td -> tr -> button
-    var rowClass = currRow.classList[0];
+function changeImportance(currProblem, importance){
+    var rowClass = currProblem.classList[0];
     swapTODOAndOthers(rowClass);
     var matches = rowClass.match(trRegex);
     // id of hidden form to update importance is <idName>isImportant<num>
     var idImportance = matches[1] + "isImportant" + matches[2];
-    console.log(idImportance);
-    document.getElementById(idImportance).value = "True"; 
+    document.getElementById(idImportance).value = importance; 
+}
+
+function addToTODO(){
+    changeImportance(this.parentElement.parentElement, "True"); // tree is from td -> tr -> button
+}
+
+function removeFromTODO(){
+    changeImportance(this.parentElement.parentElement, "False"); // tree is from td -> tr -> button
+}
+
+function updateAll(className, value){
+    for (var elem of document.getElementsByClassName(className)){
+        elem.value = value;
+    }
 }
 
 const cardLength = 360;
@@ -155,6 +168,9 @@ window.onload = function(){
     }
     for (var elem of document.getElementsByClassName("addToTODO")){
         elem.onclick = addToTODO;
+    }
+    for (var elem of document.getElementsByClassName("removeFromTODO")){
+        elem.onclick = removeFromTODO;
     }
 }
 

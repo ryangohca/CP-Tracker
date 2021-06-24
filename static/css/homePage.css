@@ -76,6 +76,10 @@
     margin-right: 0px;
 }
 
+.editCollection{
+    margin-left: 0px;
+}
+
 .collectionForm textarea{
     width: 100%;
     height: 80px;
@@ -135,21 +139,34 @@ input:read-only{
     table-layout: fixed;
 }
 
+.problemsTable tr th, .problemsTable tr td{
+    overflow-x: auto;
+}
+
 .urlLink{
-    width: 30%;
+    width: 25%;
     overflow-x: auto;
 }
 
 .buttonField{
-    width: 10%;
+    width: 12%;
 }
 
 .scoreField{
-    width: 12%;
+    width: 15%;
 }
 
 .scoreField input{
     width: 100%;
+    /* hide up-down arrows in Firefox*/
+    -moz-appearance: textfield;
+}
+
+/* hide up-down arrows */
+.scoreField input::-webkit-outer-spin-button,
+.scoreField input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .nameField{

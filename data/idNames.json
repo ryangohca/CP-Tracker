@@ -1,5 +1,6 @@
 {
     "convexhull": null,
     "slopetrick": null,
-    "sqrtdecomp": null
+    "sqrtdecomp": null,
+    "treap": null
 }

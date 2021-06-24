@@ -190,7 +190,7 @@
                 </button>
             {% endfor %}
             <!-- Add New Collections -->
-            <button class="w3-card-4 collectionCard" onclick="openModal('addcollectionmodal')">
+            <button class="w3-card-4 collectionCard" onclick="openModal('addcollectionmodal', true)">
                 <div class="signtextgroup">
                     <div class="w3-border addsign"> <p class="addsigntext"> + </p> </div>
                     <div class="newcollectiontext"> Click to add a new collection... </div>    
@@ -252,7 +252,7 @@
                                 <th class="urlLink"> Problem Link </th>
                                 <th> Problem Verdict </th>
                                 <th class="scoreField"> Score </th>
-                                <th class="buttonField"> Add to TODO </th>
+                                <th class="buttonField"> Remove From TODO </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -262,17 +262,17 @@
                                     <td class="nameField"> {{problem['name']}} </td>
                                     <td class="urlLink"> <a href="{{problem['url']}}"> {{problem['url']}} </a> </td>
                                     <td class="verdictField">
-                                        <select name="problemVerdict-{{i}}" class="{{key}}Verdict{{i}}">
+                                        <select name="problemVerdict-{{i}}" class="{{key}}Verdict{{i}}" onchange="updateAll(this.className, this.value);">
                                             {{createVerdictChoices(allVerdicts, problem['status'])}}
                                         </select>
                                     </td>
                                     {% if problem['format'] == "IOI" %}
                                         <td class="scoreField"> 
-                                            <input type="number" value="{{problem['score']}}" name="score-{{i}}" class="{{key}}Score{{i}}">
+                                            <input type="number" value="{{problem['score']}}" name="score-{{i}}" class="{{key}}Score{{i}}" onchange="updateAll(this.className, this.value);">
                                         </td>
                                     {% else %}
                                         <td class="scoreField"> 
-                                            <input type="text" value="N.A." name="score-{{i}}" class="{{key}}Score{{i}}" readonly>
+                                            <input type="text" value="N.A." name="score-{{i}}" class="{{key}}Score{{i}}" onchange="updateAll(this.className, this.value);" readonly>
                                         </td>
                                     {% endif %}
                                     <td class="buttonField">
@@ -300,17 +300,17 @@
                                     <td class="nameField"> {{problem['name']}} </td>
                                     <td class="urlLink"> <a href="{{problem['url']}}"> {{problem['url']}} </a> </td>
                                     <td class="verdictField">
-                                        <select name="problemVerdict-{{i}}" class="{{key}}Verdict{{i}}">
+                                        <select name="problemVerdict-{{i}}" class="{{key}}Verdict{{i}}" onchange="updateAll(this.className, this.value);">
                                             {{createVerdictChoices(allVerdicts, problem['status'])}}
                                         </select>
                                     </td>
                                     {% if problem['format'] == "IOI" %}
                                         <td class="scoreField"> 
-                                            <input type="number" value="{{problem['score']}}" name="score-{{i}}" class="{{key}}Score{{i}}">
+                                            <input type="number" value="{{problem['score']}}" name="score-{{i}}" class="{{key}}Score{{i}}" onchange="updateAll(this.className, this.value);">
                                         </td>
                                     {% else %}
                                         <td class="scoreField"> 
-                                            <input type="text" value="N.A." name="score-{{i}}" class="{{key}}Score{{i}}" readonly>
+                                            <input type="text" value="N.A." name="score-{{i}}" class="{{key}}Score{{i}}" onchange="updateAll(this.className, this.value);" readonly>
                                         </td>
                                     {% endif %}
                                     <td class="buttonField">
@@ -320,7 +320,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    <form action="/dummy" method="POST">
+                    <form action="{{url_for('updateProblems')}}" method="POST">
                         <!-- this would be the actual form that would be submitted. Values from visible 'form' earlier will be updated here
                         for submission. This is because we have 2 separate forms: 1 for "important (TODO)" problems, and the other to hold
                         other problems, but we can only submit one unique set of problem data. --> 
@@ -331,11 +331,12 @@
                             <select name="problemVerdict-{{i}}" class="{{key}}Verdict{{i}}" style="display:none;"> 
                                 {{createVerdictChoices(allVerdicts, problem['status'])}}
                             </select>
-                            <input type="text" value="N.A." name="score-{{i}}" class="{{key}}Score{{i}}" style="display:none;">
+                            <input type="text" value='{% if problem["format"] == "ICPC" %}N.A.{% else %}{{problem["score"]}}{% endif %}' name="score-{{i}}" class="{{key}}Score{{i}}" style="display:none;">
                             <input type="text" value="{{problem['important']}}" name="isImportant-{{i}}" id="{{key}}isImportant{{i}}" style="display:none;">
                         {% endfor %}
                         <button type="submit" class="w3-button w3-right w3-green submitCollection"> Update Problem List </button>
                     </form>
+                    <button type="button" class="w3-button w3-left w3-green editCollection" onclick="closeModal('{{key}}Modal');openModal('{{key}}SettingsModal');"> Edit Collection </button>
                 </div>
             </div>
         </div>

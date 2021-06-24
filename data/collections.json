@@ -36,18 +36,18 @@
                         "format": "IOI",
                         "important": false,
                         "name": "Sonya",
-                        "score": 0,
-                        "solved": false,
-                        "status": "Unattempted",
+                        "score": 100,
+                        "solved": true,
+                        "status": "Accepted",
                         "url": "https://codebreaker.xyz/problem/sonya"
                     },
                     {
                         "format": "IOI",
-                        "important": true,
+                        "important": false,
                         "name": "Safety",
-                        "score": 0,
-                        "solved": false,
-                        "status": "Unattempted",
+                        "score": 100,
+                        "solved": true,
+                        "status": "Accepted",
                         "url": "https://codebreaker.xyz/problem/safety"
                     },
                     {
@@ -62,7 +62,7 @@
                 ],
                 "publishedDate": null,
                 "shortDescription": "Slope Trick Practice                                                                                                                                  ",
-                "solvedProblems": 0,
+                "solvedProblems": 2,
                 "title": "Slope Trick Practice Problems",
                 "totalProblems": 3
             },
@@ -105,6 +105,37 @@
                 "solvedProblems": 1,
                 "title": "Square Root Decomposition Practice Problems",
                 "totalProblems": 3
+            },
+            "treap": {
+                "createdDate": "24/06/2021",
+                "description": "This is a very very very difficult problem set.",
+                "id": "treap",
+                "isPublic": true,
+                "problems": [
+                    {
+                        "format": "IOI",
+                        "important": false,
+                        "name": "Animal Editor",
+                        "score": 100,
+                        "solved": true,
+                        "status": "Accepted",
+                        "url": "https://codebreaker.xyz/problem/animaleditor"
+                    },
+                    {
+                        "format": "ICPC",
+                        "important": true,
+                        "name": "Spring Trap",
+                        "score": "N.A.",
+                        "solved": false,
+                        "status": "Theory Solved",
+                        "url": "https://codebreaker.xyz/problem/springtrap"
+                    }
+                ],
+                "publishedDate": "24/06/2021",
+                "shortDescription": "This is a very very very difficult problem set.",
+                "solvedProblems": 1,
+                "title": "Treap Practice Problems",
+                "totalProblems": 2
             }
         }
     }
