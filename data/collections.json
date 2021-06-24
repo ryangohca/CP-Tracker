@@ -24,7 +24,7 @@
             },
             "slopetrick": {
                 "createdDate": "29/05/2021",
-                "description": "    Slope Trick Practice   ",
+                "description": "Slope Trick Practice",
                 "id": "slopetrick",
                 "isPublic": false,
                 "problems": [
@@ -54,7 +54,7 @@
             },
             "sqrtdecomp": {
                 "createdDate": "23/06/2021",
-                "description": "  return abort(503, \"Access Denied\") ",
+                "description": "return abort(503, \"Access Denied\")",
                 "id": "sqrtdecomp",
                 "isPublic": true,
                 "problems": [

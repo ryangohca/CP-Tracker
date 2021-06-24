@@ -26,9 +26,9 @@
     {% endif %}
     <label for='description'> Description: </label>
     {% if 'description' in data %}
-        <textarea id="{{data['id'] + '-description'}}" name='description'> {{data['description']}} </textarea>
+        <textarea id="{{data['id'] + '-description'}}" name='description'>{{data['description']}}</textarea>
     {% else %}
-        <textarea id="newDescription" name="description"> </textarea>
+        <textarea id="newDescription" name="description"></textarea>
     {% endif %}
     <label> Problem(s) </label>
     <table class="w3-table-all problemsTable">
