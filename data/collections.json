@@ -101,7 +101,7 @@
                 "problems": [
                     {
                         "format": "IOI",
-                        "important": false,
+                        "important": true,
                         "name": "Fenwick Tree",
                         "score": 100,
                         "solved": true,
@@ -109,17 +109,8 @@
                         "url": "https://codebreaker.xyz/problem/fenwicktree"
                     },
                     {
-                        "format": "ICPC",
-                        "important": false,
-                        "name": "Little Elephant and Array",
-                        "score": 0,
-                        "solved": false,
-                        "status": "Unattempted",
-                        "url": "https://codeforces.com/contest/220/problem/B"
-                    },
-                    {
                         "format": "IOI",
-                        "important": true,
+                        "important": false,
                         "name": "Jakarta Skyscrapers",
                         "score": 0,
                         "solved": false,
@@ -131,7 +122,7 @@
                 "shortDescription": "return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return ...",
                 "solvedProblems": 1,
                 "title": "Square Root Decomposition Practice Problems",
-                "totalProblems": 3
+                "totalProblems": 2
             },
             "treap": {
                 "createdDate": "24/06/2021",

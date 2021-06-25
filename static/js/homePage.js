@@ -134,6 +134,7 @@ function clone(){
     for (var container of clonedElement.childNodes){
         if (container.tagName == "TD"){
             for (var elem of container.childNodes){
+                /* just in case the elem has no id or name, the program would not set an invalid one */
                 var elemID = elem.id || '';
                 var matches = elemID.match(idRegex)
                 if (matches !== null && matches.length == 3){
@@ -163,6 +164,45 @@ function remove(){
     toggleDelete(deleteButtons, currProblemLength);
 }
 
+var currDraggedRow;
+function start(){
+    currDraggedRow = event.target;
+}
+
+function dragover(){
+    var e = event;
+    e.preventDefault();
+    var currProblems = Array.from(e.target.parentElement.parentElement.children);
+    if(currProblems.indexOf(e.target.parentElement) > currProblems.indexOf(currDraggedRow)){
+        e.target.parentElement.after(currDraggedRow);
+    } else {
+        e.target.parentElement.before(currDraggedRow);
+    }
+}
+
+function reorder(){
+    var currProblems = event.target.parentElement.children;
+    var sampleTRID = currProblems[0].id;
+    var baseName = sampleTRID.match(idRegex)[1];
+    for (var i = 0; i < currProblems.length; i++){
+        currProblems[i].id = baseName + i;
+        for (var elemTD of currProblems[i].children){
+            for (var inputElem of elemTD.children){
+                /* just in case the elem has no id or name, the program would not set an invalid one */
+                var elemID = inputElem.id || ''; 
+                var matches = elemID.match(idRegex)
+                if (matches !== null && matches.length == 3){
+                    inputElem.id = matches[1] + i;
+                }
+                var elemName = inputElem.name || '';
+                matches = elemName.match(idRegex);
+                if (matches !== null && matches.length == 3){
+                    inputElem.name = matches[1] + i;
+                }
+            }
+        }
+    }
+}
 /* The TODO table and the other problems table has the same problems row, but only those relevant are shown.
 To "move" from TODO table to other problem or vice versa, we just need to swap the visibility of these rows.
 */
