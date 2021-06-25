@@ -71,6 +71,15 @@
                     {
                         "format": "IOI",
                         "important": false,
+                        "name": "Merchant Otter",
+                        "score": 0,
+                        "solved": false,
+                        "status": "Unattempted",
+                        "url": "https://codebreaker.xyz/problem/merchant_o"
+                    },
+                    {
+                        "format": "IOI",
+                        "important": false,
                         "name": "Fireworks",
                         "score": 0,
                         "solved": false,
@@ -79,10 +88,10 @@
                     }
                 ],
                 "publishedDate": null,
-                "shortDescription": "Slope Trick Practice                                                                                                                                  ",
+                "shortDescription": "Slope Trick Practice",
                 "solvedProblems": 2,
                 "title": "Slope Trick Practice Problems",
-                "totalProblems": 3
+                "totalProblems": 4
             },
             "sqrtdecomp": {
                 "createdDate": "23/06/2021",

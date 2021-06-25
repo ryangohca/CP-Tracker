@@ -196,7 +196,7 @@ def addCollection():
         currCollection['createdDate'] = allUsersCollections[loginUser]['collections'][collectionID]['createdDate']
     else:
         currCollection['createdDate'] = date.today().strftime("%d/%m/%Y")
-    regex = re.compile("^(.*?)(\d)+$")
+    regex = re.compile("^(.*?)(\d+)$")
     currCollection['problems'] = []
     solvedProblems = 0
     allUrls = set() # Since url is used as an id, we need to check that all urls in the same collection are unique, or reject input.

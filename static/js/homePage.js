@@ -103,6 +103,7 @@ function openDeleteCollectionsForm(tabContentID){
         elem.style.display = "block";
     }
 }
+
 function openCollectionsTab(tabContentID, canEdit){
     openTab("collectionscontainer", tabContentID);
     normaliseCardLength(cardLength);
@@ -125,10 +126,11 @@ function openCollectionsTab(tabContentID, canEdit){
 }
 
 function clone(){
-    idx += 1;
+    var idx = getLargestProblemIndex(this.closest(".w3-modal").id) + 1;
     var sampleRow = this.closest(".clonedInput");
     var clonedElement = sampleRow.cloneNode(true);
-    clonedElement.id = "clonedInput" + idx;
+    var namePart = clonedElement.id.match(idRegex)[1];
+    clonedElement.id = namePart + idx;
     for (var container of clonedElement.childNodes){
         if (container.tagName == "TD"){
             for (var elem of container.childNodes){
