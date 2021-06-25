@@ -163,7 +163,7 @@
 {% endif %}
 <h2 class="maintitle"> My Collections </h2>
 <!-- The whole collection div has a semi-hidden form to handle delete collection requests -->
-<form method="POST" action="/dummy">
+<form method="POST" action="{{url_for('deleteCollections')}}">
     <div id="collections">
         <!-- tab links -->
         <div class="flexcontainer" id="collectionstab">
@@ -224,12 +224,14 @@
                     </div>
                 {% endfor %}
                 <!-- Add New Collections -->
-                <button type="button" class="w3-card-4 collectionCard" onclick="openModal('addcollectionmodal', true)">
-                    <div class="signtextgroup">
-                        <div class="w3-border addsign"> <p class="addsigntext"> + </p> </div>
-                        <div class="newcollectiontext"> Click to add a new collection... </div>    
-                    </div>
-                </button>
+                <div class="w3-display-container collectionCardBorder">
+                    <button type="button" class="w3-card-4 collectionCard" onclick="openModal('addcollectionmodal', true)">
+                        <div class="signtextgroup">
+                            <div class="w3-border addsign"> <p class="addsigntext"> + </p> </div>
+                            <div class="newcollectiontext"> Click to add a new collection... </div>    
+                        </div>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

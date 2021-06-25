@@ -220,7 +220,7 @@ def addCollection():
             currCollection['problems'].append(currProblem)
     if len(allUrls) != len(currCollection['problems']): # Oops there's a duplicate url somewhere
         # Very likely the user inputted wrongly, a single url should not point to 2 different problems
-        return redirect(url_for('success', error="There are 2 problems with the same url in the collection. Please try again.")) # The function name is called 'success'...
+        return redirect(url_for('success', failure="There are at least 2 problems with the same url in the collection. Please try again.")) # The function name is called 'success'...
 
     currCollection['solvedProblems'] = solvedProblems
     currCollection['totalProblems'] = len(currCollection['problems'])
@@ -260,6 +260,24 @@ def updateProblems():
     allUsersCollections[loginUser]['collections'][collectionID]['solvedProblems'] = numProblemsSolved
     with open(COLLECTIONS_FILE, 'w') as f:
         json.dump(allUsersCollections, f, indent=4, sort_keys=True)
-    return redirect(url_for('success'))
+    return redirect(url_for('success', success="Problem(s) statuses saved."))
+
+@app.route("/deleteCollections", methods=["GET", "POST"])
+def deleteCollections():
+    global loginUser
+    if loginUser is None:
+        return abort(503, "Access Denied")
+    with open(COLLECTIONS_FILE) as f:
+        allUsersCollections = json.load(f)
+    with open(IDNAME_FILE) as f:
+        idNames = json.load(f)
+    for collection in request.form:
+        del idNames[collection]
+        del allUsersCollections[loginUser]['collections'][collection]
+    with open(COLLECTIONS_FILE, 'w') as f:
+        json.dump(allUsersCollections, f, indent=4, sort_keys=True)
+    with open(IDNAME_FILE, 'w') as f:
+        json.dump(idNames, f, indent=4, sort_keys=True)
+    return redirect(url_for('success', success=f"{len(request.form)} collection(s) deleted successfully."))
 
 app.run(host="0.0.0.0", port=8080, debug=True)
