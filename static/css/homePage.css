@@ -1,14 +1,16 @@
+.alertContainer{
+    margin: 5px 20px;
+    padding-left: 20px;
+    border-radius: 5px;
+}
+
 #collections{
     margin-left: 20px;
     margin-right: 20px;
 }
 
-#collectionstab{
+#actualTabs{
     justify-content: stretch;
-}
-
-#collectionstab:after{
-    display: block;
 }
 
 .collectionscontainer{
@@ -18,8 +20,11 @@
 
 .collectionCard{
     display: block;
-    margin: 10px;
     min-height: 200px;
+}
+
+.collectionCardBorder{
+    margin: 10px;
 }
 
 .collectionCard:hover{
@@ -29,6 +34,25 @@
 .collectionCard > *{
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.collectionCard:disabled{
+    /* There should be no style changes when disabling the collection card */
+    color: black;
+    background-color: rgb(238, 238, 238);
+    border-color: rgb(133, 133, 133);
+    border-width: 1px;
+    /* except for this */
+    cursor: default;
+}
+
+.deleteCollectionCheckboxSpan{
+    margin-right: 0px;
+}
+
+.deleteCollectionCheckboxSpan input[type=checkbox]{
+    width: 30px;
+    height: 30px;
 }
 
 .cardcontainer{

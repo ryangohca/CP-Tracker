@@ -28,12 +28,18 @@ def userExist(form, field):
             raise validators.ValidationError("Username does not exist in server.")
 
 def passwordMatch(form, field):
-    attemptedHashedPassword = hashlib.sha512(bytes(field.data.strip(), encoding='utf8')).hexdigest()
+    # We do not strip leading / ending spaces, it could be deliberate as a password.
+    attemptedHashedPassword = hashlib.sha512(bytes(field.data, encoding='utf8')).hexdigest()
     with open(PASSWORD_FILE) as f:
         userDict = json.load(f)
+        # wt-forms evaulates all validators before submitting the form, even if the previous validator fails
+        # so we still have to check whether the username is in the database here to avoid a KeyError
         if form.username.data.strip() in userDict:
             actualHashedPassword = userDict[form.username.data.strip()]['password']
         else:
+            # if username is not valid, suppress this validator. There is no reason to say it twice, for it would
+            # be handled by the validator specific to username.
+            # Also, we suppress so that we do not show "Password is incorrect" which is completely absurd in this case. 
             return
     if attemptedHashedPassword != actualHashedPassword:
         raise validators.ValidationError("Password is incorrect.")
@@ -72,12 +78,15 @@ def login():
 def success():
     if loginUser is None:
         return abort(503, "Access Denied")
-    #TODO: notify user login successful\
     with open(COLLECTIONS_FILE) as f:
         myCollections = json.load(f)[loginUser]["collections"]
     orderKey = sorted(myCollections, key=lambda x: datetime.strptime(myCollections[x]["createdDate"], "%d/%m/%Y"))
+    if 'failure' in request.args:
+        return render_template("homePage.html", failure=request.args['failure'], myCollections=myCollections, orderKey=orderKey, allVerdicts=ALL_PROBLEM_VERDICTS)
     if 'warning' in request.args:
         return render_template("homePage.html", warning=request.args['warning'], myCollections=myCollections, orderKey=orderKey, allVerdicts=ALL_PROBLEM_VERDICTS)
+    if 'success' in request.args:
+         return render_template("homePage.html", success=request.args['success'], myCollections=myCollections, orderKey=orderKey, allVerdicts=ALL_PROBLEM_VERDICTS)
     return render_template("homePage.html", myCollections=myCollections, orderKey=orderKey, allVerdicts=ALL_PROBLEM_VERDICTS)
 
 @app.route("/logout")
@@ -108,7 +117,7 @@ def signUp():
         collections[loginUser]['collections'] = {}
         with open(COLLECTIONS_FILE, 'w') as f:
             json.dump(collections, f, indent=4, sort_keys=True)
-        return redirect(url_for("success"))
+        return redirect(url_for("success", success="Login is successful!"))
     return render_template('index.html', signupForm=form, loginForm=LoginForm())
 
 def usedID(id):
@@ -144,17 +153,22 @@ def addCollection():
     global loginUser
     if loginUser is None:
         return abort(503, "Access Denied")
+    
+    # Get all current data.
+    with open(COLLECTIONS_FILE) as f:
+        allUsersCollections = json.load(f)
+
     userCollectionIDInput = request.form["collectionID"]
     collectionID = userCollectionIDInput
     warning = ""
-    with open(COLLECTIONS_FILE) as f:
-        allUsersCollections = json.load(f)
-    if request.form['idPrefilled'] == "false":
+
+    if request.form['idPrefilled'] == "false": # if this is false, it means that id can be changed -> new collection
         if usedID(userCollectionIDInput):
-            collectionID = reformID(userCollectionIDInput)
+            # changes id by adding a number behind it to make it unique.
+            collectionID = reformID(userCollectionIDInput)  
             warning = f"Collection ID '{userCollectionIDInput}' has been renamed to '{collectionID}' as it is already in use."
-        addIDToServer(collectionID)
         allUsersCollections[loginUser]['collections'][collectionID] = {}
+
     currCollection = {}
     currCollection['title'] = request.form['collectionTitle']
     currCollection['id'] = collectionID
@@ -185,12 +199,14 @@ def addCollection():
     regex = re.compile("^(.*?)(\d)+$")
     currCollection['problems'] = []
     solvedProblems = 0
+    allUrls = set() # Since url is used as an id, we need to check that all urls in the same collection are unique, or reject input.
     for name in request.form:
         if name.startswith("problemName-"):
             number = regex.match(name).group(2)
             currProblem = {}
             currProblem['name'] = request.form["problemName-" + number]
             currProblem['url'] = request.form["problemUrl-" + number]
+            allUrls.add(currProblem['url'])
             currProblem['format'] = request.form["problemFormat-" + number]
             currProblem['solved'] = prevProblems[currProblem['url']]['solved'] if currProblem['url'] in prevProblems else False
             currProblem['status'] = prevProblems[currProblem['url']]['status'] if currProblem['url'] in prevProblems else 'Unattempted'
@@ -202,14 +218,22 @@ def addCollection():
             if currProblem['solved']:
                 solvedProblems += 1
             currCollection['problems'].append(currProblem)
+    if len(allUrls) != len(currCollection['problems']): # Oops there's a duplicate url somewhere
+        # Very likely the user inputted wrongly, a single url should not point to 2 different problems
+        return redirect(url_for('success', error="There are 2 problems with the same url in the collection. Please try again.")) # The function name is called 'success'...
+
     currCollection['solvedProblems'] = solvedProblems
     currCollection['totalProblems'] = len(currCollection['problems'])
     allUsersCollections[loginUser]['collections'][collectionID] = currCollection
+
+    # Update JSON here, after ensuring that all data is (somewhat) valid.
+    if request.form['idPrefilled'] == "false":
+        addIDToServer(collectionID)
     with open(COLLECTIONS_FILE, 'w') as f:
         json.dump(allUsersCollections, f, indent=4, sort_keys=True)
     if warning != '':
         return redirect(url_for('success', warning=warning))
-    return redirect(url_for('success'))
+    return redirect(url_for('success', success="Collections Updated!"))
     
 @app.route("/updateProblems", methods=["GET", "POST"])
 def updateProblems():

@@ -18,7 +18,8 @@ function normaliseCardLength(cardLength){
     var maxTitleHeight = 0;
     var maxDescHeight = 0;
     for (var content of document.getElementsByClassName("collectionCard")) {
-        if (content.parentElement.parentElement.style.display === 'none') continue;
+        // div [class='collectionscontainer'] -> div[class='flex-container'] -> div[class='collectionCardBorder'] -> div [class='collectionCard']
+        if (content.parentElement.parentElement.parentElement.style.display === 'none') continue;
         content.style.width = (containerLen / expectedCards) - 30 + "px"; // 30px offset because of margin
         maxHeight = Math.max(content.offsetHeight, maxHeight);
         var title = content.getElementsByClassName("card-header");
@@ -33,7 +34,7 @@ function normaliseCardLength(cardLength){
         }
     }
     for (var content of document.getElementsByClassName("collectionCard")) {
-        if (content.parentElement.parentElement.style.display === 'none') continue;
+        if (content.parentElement.parentElement.parentElement.style.display === 'none') continue;
         content.style.height = maxHeight + "px";
         var title = content.getElementsByClassName("card-header");
         if (title.length !== 0){
@@ -80,9 +81,47 @@ function closeModal(modalId){
     document.getElementById(modalId).style.display='none';
 }
 
-function openCollectionsTab(tabID){
-    openTab("collectionscontainer", tabID);
+function clearAllDeleteCheckboxes(){
+    for (var elem of document.getElementsByClassName('deleteCollectionCheckboxSpan')){
+        elem.getElementsByTagName("input")[0].checked = false;
+        elem.style.display = "none";
+    }
+}
+
+function openDeleteCollectionsForm(tabContentID){
+    var currentTab = document.getElementById(tabContentID);
+    var cancelButton = document.getElementById('cancelbutton');
+    cancelButton.style.display = "inline-block";
+    cancelButton.onclick = function(){
+        clearAllDeleteCheckboxes();
+        this.style.display = "none";
+        document.getElementById("deletebutton").style.display = "none";
+        document.getElementById("editcollectionsbutton").style.display = "inline-block";
+    }
+    document.getElementById("deletebutton").style.display = "inline-block";
+    for (var elem of currentTab.getElementsByClassName("deleteCollectionCheckboxSpan")){
+        elem.style.display = "block";
+    }
+}
+function openCollectionsTab(tabContentID, canEdit){
+    openTab("collectionscontainer", tabContentID);
     normaliseCardLength(cardLength);
+    if (canEdit){
+        var editCollectionButton = document.getElementById("editcollectionsbutton");
+        editCollectionButton.style.display = "inline-block";
+        editCollectionButton.onclick = function(){
+            // ensures that only those checkboxes relevant are shown, the other irrelevant checkboxes are still hidden 
+            // (if we ever want to add another editable collection tab)
+            clearAllDeleteCheckboxes();
+            this.style.display = "none";
+            openDeleteCollectionsForm(tabContentID);
+        }
+    } else {
+        clearAllDeleteCheckboxes();
+        document.getElementById("editcollectionsbutton").style.display = "none";
+        document.getElementById("deletebutton").style.display = "none";
+        document.getElementById("cancelbutton").style.display = "none";
+    }
 }
 
 function clone(){

@@ -142,64 +142,98 @@
 {% endblock %}
 
 {% block body %}
+<!-- show any alert bars if there is one-->
+{% if success is defined %}
+<div class="w3-display-container w3-border w3-green alertContainer">
+    <p>{{success}}</p>
+    <span onclick="this.parentElement.style.display = 'none';" class="w3-button w3-display-right">&times;</span>
+</div>
+{% endif %}
+{% if warning is defined %}
+<div class="w3-display-container w3-border w3-orange alertContainer">
+    <p>{{warning}}</p>
+    <span onclick="this.parentElement.style.display = 'none';" class="w3-button w3-display-right">&times;</span>
+</div>
+{% endif %}
+{% if failure is defined %}
+<div class="w3-display-container w3-border w3-red alertContainer">
+    <p>{{failure}}</p>
+    <span onclick="this.parentElement.style.display = 'none';" class="w3-button w3-display-right">&times;</span>
+</div>
+{% endif %}
 <h2 class="maintitle"> My Collections </h2>
-<div id="collections">
-    <!-- tab links -->
-    <div class="flexcontainer" id="collectionstab">
-        <button class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openCollectionsTab("publicCollectionsDiv");'> Public Collections </button>
-        <button class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openCollectionsTab("myCollectionsDiv");'> My Collections </button>
-    </div>
+<!-- The whole collection div has a semi-hidden form to handle delete collection requests -->
+<form method="POST" action="/dummy">
+    <div id="collections">
+        <!-- tab links -->
+        <div class="flexcontainer" id="collectionstab">
+            <div id="actualTabs" class="flexcontainer">
+                <button type="button" class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openCollectionsTab("publicCollectionsDiv", false);'> Public Collections </button>
+                <button type="button" class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openCollectionsTab("myCollectionsDiv", true);'> My Collections </button>
+            </div>
+            <div id="actualTabs" class="flexcontainer">
+                <button type="submit" class="w3-bar-item w3-button w3-green invisibleAfterLoad" id="deletebutton"> Delete </button>
+                <button type="button" class="w3-bar-item w3-button w3-green invisibleAfterLoad" id="cancelbutton"> Cancel </button>
+                <button type="button" class="w3-bar-item w3-button w3-green invisibleAfterLoad" id="editcollectionsbutton"> Edit Collections </button>
+            </div>
+        </div>
 
-    <!-- content in the 'Public Collections' tab -->
-    <div id="publicCollectionsDiv" class="w3-border collectionscontainer">
-        <p> To be added </p>
-    </div>
+        <!-- content in the 'Public Collections' tab -->
+        <div id="publicCollectionsDiv" class="w3-border collectionscontainer">
+            <p> To be added </p>
+        </div>
 
-    <!-- content in the 'My Collections' tab -->
-    <div id="myCollectionsDiv" class="w3-border collectionscontainer">
-        <div class="cardcontainer flexcontainer">
-            <!-- Collections -->
-            {% for key in orderKey %}
-                {% set value = myCollections[key] %}
-                <button class="w3-card-4 collectionCard" onclick='openModal("{{key}}Modal")'>
-                    <div class="h3-container w3-gray card-header">
-                        <h5 class="card-title"> {{value['title']}} </h5>
+        <!-- content in the 'My Collections' tab -->
+        <div id="myCollectionsDiv" class="w3-border collectionscontainer">
+            <div class="cardcontainer flexcontainer">
+                <!-- Collections -->
+                {% for key in orderKey %}
+                    {% set value = myCollections[key] %}
+                    <div class="w3-display-container collectionCardBorder">
+                        <span class="w3-display-topright deleteCollectionCheckboxSpan invisibleAfterLoad">
+                            <!-- we identify this input field from the class in the enclosing span, so that the span can hide when unneeded -->
+                            <input type="checkbox" name="{{key}}">
+                        </span>
+                        <button type="button" class="w3-card-4 collectionCard" onclick='openModal("{{key}}Modal")'>
+                            <div class="h3-container w3-gray card-header">
+                                <h5 class="card-title"> {{value['title']}} </h5>
+                            </div>
+
+                            <div class="w3-light-gray w3-border card-progress-bar">
+                                {% set percentage = (value['solvedProblems'] / value['totalProblems'] * 100)|round|int %}
+                                <div class="w3-green w3-text-black" style="width: {{percentage}}%">{{percentage}}%</div>
+                            </div>
+
+                            <div class="card-desc">{{value['shortDescription']}}</div>
+
+                            <div class="card-created"> 
+                                <p> <b> Created on: </b> {{value['createdDate']}} </p>
+                            </div>
+
+                            <div class="card-shared"> 
+                                <p> 
+                                    <b> Shared: </b> 
+                                    {% if value['publishedDate'] is not none %}
+                                        {{value['publishedDate']}}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </button>
                     </div>
-
-                    <div class="w3-light-gray w3-border card-progress-bar">
-                        {% set percentage = (value['solvedProblems'] / value['totalProblems'] * 100)|round|int %}
-                        <div class="w3-green w3-text-black" style="width: {{percentage}}%">{{percentage}}%</div>
-                    </div>
-
-                    <div class="card-desc">{{value['shortDescription']}}</div>
-
-                    <div class="card-created"> 
-                        <p> <b> Created on: </b> {{value['createdDate']}} </p>
-                    </div>
-
-                    <div class="card-shared"> 
-                        <p> 
-                            <b> Shared: </b> 
-                            {% if value['publishedDate'] is not none %}
-                                {{value['publishedDate']}}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </p>
+                {% endfor %}
+                <!-- Add New Collections -->
+                <button type="button" class="w3-card-4 collectionCard" onclick="openModal('addcollectionmodal', true)">
+                    <div class="signtextgroup">
+                        <div class="w3-border addsign"> <p class="addsigntext"> + </p> </div>
+                        <div class="newcollectiontext"> Click to add a new collection... </div>    
                     </div>
                 </button>
-            {% endfor %}
-            <!-- Add New Collections -->
-            <button class="w3-card-4 collectionCard" onclick="openModal('addcollectionmodal', true)">
-                <div class="signtextgroup">
-                    <div class="w3-border addsign"> <p class="addsigntext"> + </p> </div>
-                    <div class="newcollectiontext"> Click to add a new collection... </div>    
-                </div>
-            </button>
+            </div>
         </div>
     </div>
-</div>
-
+</form>
 <!-- Modals -->
 
 <!-- Modal specifically to add a new collection --> 
