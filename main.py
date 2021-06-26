@@ -85,35 +85,40 @@ def success():
         publicCollections = json.load(f)
     orderKey = sorted(myCollections, key=lambda x: datetime.strptime(myCollections[x]["createdDate"], "%d/%m/%Y"))
     publicOrderKey = sorted(publicCollections, key=lambda x: datetime.strptime(myCollections[x]["createdDate"], "%d/%m/%Y"), reverse=True)
+    suggestedIDs = [reformID(collectionId) for collectionId in publicOrderKey]
     if 'failure' in request.args:
-        return render_template("homePage.html", 
-                                failure=request.args['failure'], 
-                                myCollections=myCollections, 
-                                orderKey=orderKey,
-                                publicCollections=publicCollections,
-                                publicOrderKey=publicOrderKey, 
-                                allVerdicts=ALL_PROBLEM_VERDICTS)
-    if 'warning' in request.args:
-        return render_template("homePage.html", 
-                                warning=request.args['warning'], 
+        return render_template("homePage.html",
+                                failure=request.args['failure'],
                                 myCollections=myCollections,
                                 orderKey=orderKey,
                                 publicCollections=publicCollections,
-                                publicOrderKey=publicOrderKey, 
+                                publicOrderKey=publicOrderKey,
+                                suggestedIDs=suggestedIDs,
                                 allVerdicts=ALL_PROBLEM_VERDICTS)
-    if 'success' in request.args:
-         return render_template("homePage.html", 
-                                success=request.args['success'], 
-                                myCollections=myCollections, 
+    if 'warning' in request.args:
+        return render_template("homePage.html",
+                                warning=request.args['warning'],
+                                myCollections=myCollections,
                                 orderKey=orderKey,
                                 publicCollections=publicCollections,
-                                publicOrderKey=publicOrderKey, 
+                                publicOrderKey=publicOrderKey,
+                                suggestedIDs=suggestedIDs,
                                 allVerdicts=ALL_PROBLEM_VERDICTS)
-    return render_template("homePage.html", 
-                            myCollections=myCollections, 
+    if 'success' in request.args:
+         return render_template("homePage.html",
+                                success=request.args['success'],
+                                myCollections=myCollections,
+                                orderKey=orderKey,
+                                publicCollections=publicCollections,
+                                publicOrderKey=publicOrderKey,
+                                suggestedIDs=suggestedIDs,
+                                allVerdicts=ALL_PROBLEM_VERDICTS)
+    return render_template("homePage.html",
+                            myCollections=myCollections,
                             orderKey=orderKey,
                             publicCollections=publicCollections,
-                            publicOrderKey=publicOrderKey, 
+                            publicOrderKey=publicOrderKey,
+                            suggestedIDs=suggestedIDs,
                             allVerdicts=ALL_PROBLEM_VERDICTS)
 
 @app.route("/logout")

@@ -100,6 +100,7 @@
 /* to align submit button with the textboxes */
 .collectionForm .submitCollection{
     margin-right: 0px;
+    display: block;
 }
 
 .editCollection{
@@ -222,4 +223,21 @@ input:read-only{
 
 .invisibleAfterLoad{
     display: none;
+}
+
+.cloneModalContent{
+    max-width: 600px;
+}
+
+.cloneForm div{
+    display: flex;
+    align-items: center;
+}
+
+.cloneNewID{
+    flex: 2;
+}
+
+.cloneNewID, .labelNewID{
+    margin: 5px;
 }

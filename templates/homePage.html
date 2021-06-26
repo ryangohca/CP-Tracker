@@ -444,8 +444,32 @@
                         </tbody>
                     </table>
                     <p> <b> Note: </b> You would have to clone the problem list if you want to update the problems that you have done. </p>
-                    <button type="submit" class="w3-button w3-right w3-green submitCollection"> Clone Problem List </button>
+                    <button type="button" class="w3-button w3-right w3-green submitCollection" onclick="closeModal('public{{key}}Modal');openModal('public{{key}}CloneModal');"> Clone Problem List </button>
                 </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+<!-- Modals for users to clone public collections, and set a new collection ID -->
+{% for i in range(publicOrderKey|length) %}
+    {% set key = publicOrderKey[i] %}
+    {% set suggestedID = suggestedIDs[i] %}
+    {% set value = publicCollections[key] %}
+    <div id="public{{key}}CloneModal" class="w3-modal">
+        <div class="w3-modal-content cloneModalContent">
+            <div class="w3-container">
+                <span onclick="closeModal('public{{key}}CloneModal');" class="w3-button w3-display-topright">&times;</span>
+                <h3> Set New Collection ID </h3>
+                <hr>
+                <form action="/dummy" method="POST" class="cloneForm">
+                    <input type="hidden" name="originalID" value="{{key}}">
+                    <div>
+                        <label for="newID" class="labelNewID"> New ID: </label>
+                        <input type="text" value="{{suggestedID}}" name="newID" class="cloneNewID" required>
+                    </div>
+                    <button type="submit" class="w3-button w3-right w3-green submitCollection"> Clone! </button>
+                </form>
             </div>
         </div>
     </div>
