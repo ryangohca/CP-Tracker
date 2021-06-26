@@ -1,0 +1,44 @@
+{% extends "template.html" %}
+
+{% block otherScripts %}
+<!-- Since this is just a small webpage, we will not put its styles and scripts in a separate file -->
+<style>
+    #collectionID, #output{
+        /* align with main title */
+        margin-left: 20px;
+    }
+</style>
+<script>
+    function checkID(allIDDict, currID){
+        if (currID == ''){
+            updateOutput(currID, true, true); // second argumnet does not matter here
+        }
+        if (allIDDict.hasOwnProperty(currID)){
+            updateOutput(currID, true);
+        } else {
+            updateOutput(currID, false);
+        }
+    }
+    function updateOutput(currID, isUsed, isInvalid=false){
+        var outputText = document.getElementById('output');
+        if (isInvalid){
+            outputText.innerHTML = '';
+            return;
+        }
+        if (isUsed){
+            outputText.style.color = 'red';
+            outputText.innerHTML = "Collection ID `" + currID + "` is used."
+        } else {
+            outputText.style.color = 'green';
+            outputText.innerHTML = "Collection ID `" + currID + "` is not used!"
+        }
+    }
+</script>
+{% endblock %}
+
+{% block body %}
+<h2 class="maintitle"> Check whether your Collection ID is taken here! </h2>
+<!-- oninput must be enclosed in single quotes, because json string is enclosed in double quotes -->
+<input type="text" name="collectionID" id="collectionID" oninput='checkID({{allIDs|tojson|safe}}, this.value);'> 
+<p class="w3-small" id="output"></p>
+{% endblock %}

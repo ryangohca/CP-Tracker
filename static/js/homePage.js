@@ -11,22 +11,30 @@ function getLengthCardContainer(){
     }
 }
 
-function normaliseCardLength(cardLength){
+function normaliseCard(cardLength){
     var containerLen = getLengthCardContainer();
+    // for this length of card container, how many cards are we expecting to fit, if each card width is around the length of 'cardLength'?
     var expectedCards = Math.round(containerLen / cardLength);
     var maxHeight = 0;
     var maxTitleHeight = 0;
     var maxDescHeight = 0;
     for (var content of document.getElementsByClassName("collectionCard")) {
         // div [class='collectionscontainer'] -> div[class='flex-container'] -> div[class='collectionCardBorder'] -> div [class='collectionCard']
-        if (content.parentElement.parentElement.parentElement.style.display === 'none') continue;
+        if (content.parentElement.parentElement.parentElement.style.display === 'none') continue; // do not EVER touch display:none elements
+        
         content.style.width = (containerLen / expectedCards) - 30 + "px"; // 30px offset because of margin
+        
+        // calculate max height of the whole card for all cards
         maxHeight = Math.max(content.offsetHeight, maxHeight);
+
+        // calculate max height of the title text for all cards
         var title = content.getElementsByClassName("card-header");
         if (title.length !== 0){
             var actualTitleHeight = title[0].getElementsByClassName("card-title")[0].offsetHeight;
             maxTitleHeight = Math.max(actualTitleHeight, maxTitleHeight);
         }
+
+        // calculate max height of the description div (that contains the short description of the collection) for all cards
         var desc = content.getElementsByClassName("card-desc")
         if (desc.length !== 0){
             var actualDescHeight = desc[0].offsetHeight;
@@ -46,8 +54,9 @@ function normaliseCardLength(cardLength){
         }
     }
 }
-var idx = 0;
-const idRegex = /^(.*?)(\d+)$/i; // used to detect <idName><num> so that we can increase num by 1 for every new element.
+// used to detect <idName><num> so that we can increase num by 1 for every new element.
+// after calling .match(), it will return [<fullMatch>, <namePortion>, <endNumber>]
+const idRegex = /^(.*?)(\d+)$/i; 
 
 function getLargestProblemIndex(modalId){
     var elems = document.querySelectorAll("#" + modalId + " div div form table tbody .clonedInput");
@@ -70,7 +79,6 @@ function toggleDelete(removeButtonElems, currLength){
 function openModal(modalId, problemLengthCanChange=false){
     document.getElementById(modalId).style.display='block';
     if (problemLengthCanChange){
-        idx = getLargestProblemIndex(modalId);
         var currProblemLength = getNumProblems(modalId);
         var removeButtons = document.querySelectorAll("#" + modalId + " div div form table tbody .clonedInput td .remove");
         toggleDelete(removeButtons, currProblemLength);
@@ -79,50 +87,6 @@ function openModal(modalId, problemLengthCanChange=false){
 
 function closeModal(modalId){
     document.getElementById(modalId).style.display='none';
-}
-
-function clearAllDeleteCheckboxes(){
-    for (var elem of document.getElementsByClassName('deleteCollectionCheckboxSpan')){
-        elem.getElementsByTagName("input")[0].checked = false;
-        elem.style.display = "none";
-    }
-}
-
-function openDeleteCollectionsForm(tabContentID){
-    var currentTab = document.getElementById(tabContentID);
-    var cancelButton = document.getElementById('cancelbutton');
-    cancelButton.style.display = "inline-block";
-    cancelButton.onclick = function(){
-        clearAllDeleteCheckboxes();
-        this.style.display = "none";
-        document.getElementById("deletebutton").style.display = "none";
-        document.getElementById("editcollectionsbutton").style.display = "inline-block";
-    }
-    document.getElementById("deletebutton").style.display = "inline-block";
-    for (var elem of currentTab.getElementsByClassName("deleteCollectionCheckboxSpan")){
-        elem.style.display = "block";
-    }
-}
-
-function openCollectionsTab(tabContentID, canEdit){
-    openTab("collectionscontainer", tabContentID);
-    normaliseCardLength(cardLength);
-    if (canEdit){
-        var editCollectionButton = document.getElementById("editcollectionsbutton");
-        editCollectionButton.style.display = "inline-block";
-        editCollectionButton.onclick = function(){
-            // ensures that only those checkboxes relevant are shown, the other irrelevant checkboxes are still hidden 
-            // (if we ever want to add another editable collection tab)
-            clearAllDeleteCheckboxes();
-            this.style.display = "none";
-            openDeleteCollectionsForm(tabContentID);
-        }
-    } else {
-        clearAllDeleteCheckboxes();
-        document.getElementById("editcollectionsbutton").style.display = "none";
-        document.getElementById("deletebutton").style.display = "none";
-        document.getElementById("cancelbutton").style.display = "none";
-    }
 }
 
 function clone(){
@@ -164,6 +128,51 @@ function remove(){
     toggleDelete(deleteButtons, currProblemLength);
 }
 
+function clearAllDeleteCheckboxes(){
+    for (var elem of document.getElementsByClassName('deleteCollectionCheckboxSpan')){
+        elem.getElementsByTagName("input")[0].checked = false;
+        elem.style.display = "none";
+    }
+}
+
+function openDeleteCollectionsForm(tabContentID){
+    var currentTab = document.getElementById(tabContentID);
+    var cancelButton = document.getElementById('cancelbutton');
+    cancelButton.style.display = "inline-block";
+    cancelButton.onclick = function(){
+        clearAllDeleteCheckboxes();
+        this.style.display = "none";
+        document.getElementById("deletebutton").style.display = "none";
+        document.getElementById("editcollectionsbutton").style.display = "inline-block";
+    }
+    document.getElementById("deletebutton").style.display = "inline-block";
+    for (var elem of currentTab.getElementsByClassName("deleteCollectionCheckboxSpan")){
+        elem.style.display = "block";
+    }
+}
+
+function openCollectionsTab(tabContentID, canEdit){
+    openTab("collectionscontainer", tabContentID);
+    normaliseCard(cardLength);
+    if (canEdit){
+        var editCollectionButton = document.getElementById("editcollectionsbutton");
+        editCollectionButton.style.display = "inline-block";
+        editCollectionButton.onclick = function(){
+            // ensures that only those checkboxes relevant are shown, the other irrelevant checkboxes are still hidden 
+            // (if we ever want to add another editable collection tab)
+            clearAllDeleteCheckboxes();
+            this.style.display = "none";
+            openDeleteCollectionsForm(tabContentID);
+        }
+    } else {
+        // always help reset state to original properly
+        clearAllDeleteCheckboxes();
+        document.getElementById("editcollectionsbutton").style.display = "none";
+        document.getElementById("deletebutton").style.display = "none";
+        document.getElementById("cancelbutton").style.display = "none";
+    }
+}
+
 var currDraggedRow;
 function start(){
     currDraggedRow = event.target;
@@ -172,11 +181,26 @@ function start(){
 function dragover(){
     var e = event;
     e.preventDefault();
-    var currProblems = Array.from(e.target.parentElement.parentElement.children);
-    if(currProblems.indexOf(e.target.parentElement) > currProblems.indexOf(currDraggedRow)){
-        e.target.parentElement.after(currDraggedRow);
-    } else {
-        e.target.parentElement.before(currDraggedRow);
+    var currTableBody = e.target.parentElement.parentElement;
+    if (currTableBody.nodeName !== "TBODY"){
+        // something is wrong, we DO NOT change any element
+        return;
+    }
+    var currProblems = Array.from(currTableBody.children);
+    try{
+        if(currProblems.indexOf(e.target.parentElement) > currProblems.indexOf(currDraggedRow)){
+            e.target.parentElement.after(currDraggedRow);
+        } else {
+            e.target.parentElement.before(currDraggedRow);
+        }
+    } catch (error){
+        if (error instanceof DOMException){
+            // when dragover, we drag over the current dragged element.
+            // we just silence the error
+        } else {
+            // oops something really went wrong.
+            throw error;
+        }
     }
 }
 
@@ -203,6 +227,7 @@ function reorder(){
         }
     }
 }
+
 /* The TODO table and the other problems table has the same problems row, but only those relevant are shown.
 To "move" from TODO table to other problem or vice versa, we just need to swap the visibility of these rows.
 */
@@ -256,5 +281,5 @@ window.onload = function(){
 }
 
 window.onresize = function(){
-    normaliseCardLength(cardLength);
+    normaliseCard(cardLength);
 }

@@ -10,6 +10,8 @@
 }
 
 #actualTabs{
+    /* actualTabs is a 'flexcontainer' (definition in main.css; however the default for justify-content is 'space-between' */
+    /* what we want is to have the tabs to be next to each other without spacing, so we use justify-content: stretch */
     justify-content: stretch;
 }
 
@@ -20,6 +22,8 @@
 
 .collectionCard{
     display: block;
+    /* this is to ensure that the 'Add Collections' Card do not collapse out of shape when there is no collections (created by user),
+       as the height of all collection cards is determined by the maximum height of all cards before any height adjustment. */
     min-height: 200px;
 }
 
@@ -46,10 +50,6 @@
     cursor: default;
 }
 
-.deleteCollectionCheckboxSpan{
-    margin-right: 0px;
-}
-
 .deleteCollectionCheckboxSpan input[type=checkbox]{
     width: 30px;
     height: 30px;
@@ -64,6 +64,7 @@
     text-align: right;
 }
 
+/* the div in the 'add collection' card that contains an add 'sign' and the "Click to add a new xollection" 'text' */
 .signtextgroup{
     display: flex;
     flex-direction: column;
@@ -79,6 +80,7 @@
     border-radius: 50%;
 }
 
+/* basically the '+' sign */
 .addsigntext{
     margin: 0;
     position: absolute;
@@ -163,6 +165,8 @@ input:read-only{
     table-layout: fixed;
 }
 
+/* overflow-x: auto makes sure that every text in the table can be seen, albeit a little inconvenience from the users */
+/* this is better than overlapping text */
 .problemsTable tr th, .problemsTable tr td{
     overflow-x: auto;
 }

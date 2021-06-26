@@ -3,7 +3,16 @@
 {% macro render_field(field) %}
     <div>
         {{ field.label }}
-        {{ field(class_="w3-input w3-border", **kwargs)|safe }}
+        {# following input autocomplete guides #}
+        {% if field.id == "newPassword" or field.id == "confirm" %}
+            {{ field(class_="w3-input w3-border", autocomplete="new-password", **kwargs)|safe }}
+        {% elif field.id == "password" %}
+            {{ field(class_="w3-input w3-border", autocomplete="current-password", **kwargs)|safe }}
+        {% elif field.name == "username" %}
+            {{ field(class_="w3-input w3-border", autocomplete="username", **kwargs)|safe }}
+        {% else %}
+            {{ field(class_="w3-input w3-border", **kwargs)|safe }}
+        {% endif %}
         {% if field.errors %}
         <ul class=errors>
             {% for error in field.errors %}
@@ -42,5 +51,6 @@
                     <input type="submit" value="Sign Up"></input>
                 </form>
             </div>
+        </div>
     </body>
 </html>

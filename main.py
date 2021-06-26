@@ -45,9 +45,9 @@ def passwordMatch(form, field):
         raise validators.ValidationError("Password is incorrect.")
     
 class RegistrationForm(Form):
-    username = StringField('Username:', [validators.DataRequired(), validators.Length(min=4, max=25), userNotExist])
+    username = StringField('Username:', [validators.DataRequired(), validators.Length(min=4, max=25), userNotExist], id="newUsername")
     email = StringField('Email Address:', [validators.Length(min=6, max=35)])
-    password = PasswordField('Password:', [validators.DataRequired()])
+    password = PasswordField('Password:', [validators.DataRequired()], id="newPassword")
     confirm = PasswordField('Confirm Password:', [validators.EqualTo('password', message='Passwords must match')])
 
 class LoginForm(Form):
@@ -279,5 +279,11 @@ def deleteCollections():
     with open(IDNAME_FILE, 'w') as f:
         json.dump(idNames, f, indent=4, sort_keys=True)
     return redirect(url_for('success', success=f"{len(request.form)} collection(s) deleted successfully."))
+
+@app.route('/checkID')
+def checkID():
+    with open(IDNAME_FILE) as f:
+        allIDs = json.load(f)
+    return render_template('idChecker.html', allIDs=allIDs)
 
 app.run(host="0.0.0.0", port=8080, debug=True)
