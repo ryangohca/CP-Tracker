@@ -273,11 +273,14 @@
     <div class="w3-modal-content">
       <div class="w3-container">
         <span onclick="closeModal('addcollectionmodal');" class="w3-button w3-display-topright">&times;</span>
-        <h3> Create New Collection </h3>
-        <form action="{{ url_for('addCollection') }}" method="POST" class="collectionForm w3-container">
-            {{createProblemCollectionsForm({})}}
-            <button type="submit" id="submitNewCollection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Create Collection </button>
-        </form>
+        <div class="w3-container collectionForm">
+            <h3> Create New Collection </h3>
+            <hr>
+            <form action="{{ url_for('addCollection') }}" method="POST" class="collectionForm">
+                {{createProblemCollectionsForm({})}}
+                <button type="submit" id="submitNewCollection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Create Collection </button>
+            </form>
+        </div>
       </div>
     </div>
 </div>
@@ -289,11 +292,14 @@
         <div class="w3-modal-content">
             <div class="w3-container">
                 <span onclick="closeModal('{{key}}SettingsModal');" class="w3-button w3-display-topright">&times;</span>
-                <h3> Edit Collection </h3>
-                <form action="{{ url_for('addCollection') }}" method="POST" class="collectionForm w3-container">
-                    {{createProblemCollectionsForm(value)}}
-                    <button type="submit" id="submit{{key}}Collection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Save Collection </button>
-                </form>
+                <div class="w3-container collectionForm">
+                    <h3> Edit Collection </h3>
+                    <hr>
+                    <form action="{{ url_for('addCollection') }}" method="POST" class="collectionForm">
+                        {{createProblemCollectionsForm(value)}}
+                        <button type="submit" id="submit{{key}}Collection" name="submitNewCollection" class="w3-button w3-right w3-green submitCollection"> Save Collection </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -308,6 +314,7 @@
                 <span onclick="closeModal('{{key}}Modal');" class="w3-button w3-display-topright">&times;</span>
                 <div class="updateProblemsForm w3-container">
                     <h3> {{value['title']}} </h3>
+                    <hr>
                     <h5> Description: </h5>
                     <div class="w3-container w3-border collectionDescription">{{value['description']}}</div>
                     <label> TODO Problems </label>
@@ -421,6 +428,7 @@
                 <span onclick="closeModal('public{{key}}Modal');" class="w3-button w3-display-topright">&times;</span>
                 <div class="updateProblemsForm w3-container">
                     <h3> {{value['title']}} </h3>
+                    <hr>
                     <h5> Description: </h5>
                     <div class="w3-container w3-border collectionDescription">{{value['description']}}</div>
                     <label>  Problems </label>
