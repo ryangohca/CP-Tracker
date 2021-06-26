@@ -7,7 +7,8 @@ function openTab(contentClass, contentId) {
 
 function getLengthCardContainer(){
     for (var content of document.getElementsByClassName("cardcontainer")) {
-        if (content.style.display !== "none") return content.offsetWidth;
+        // only the parent element (the main div that is directly linked to the tabs) has it's style.display set to none
+        if (content.parentElement.style.display !== "none") return content.offsetWidth;
     }
 }
 
@@ -21,9 +22,7 @@ function normaliseCard(cardLength){
     for (var content of document.getElementsByClassName("collectionCard")) {
         // div [class='collectionscontainer'] -> div[class='flex-container'] -> div[class='collectionCardBorder'] -> div [class='collectionCard']
         if (content.parentElement.parentElement.parentElement.style.display === 'none') continue; // do not EVER touch display:none elements
-        
         content.style.width = (containerLen / expectedCards) - 30 + "px"; // 30px offset because of margin
-        
         // calculate max height of the whole card for all cards
         maxHeight = Math.max(content.offsetHeight, maxHeight);
 

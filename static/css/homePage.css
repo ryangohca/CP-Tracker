@@ -206,6 +206,20 @@ input:read-only{
     height: 100%;
 }
 
+.publicNameField{
+    width: 30%;
+}
+
+.publicUrlLink{
+    width: 50%;
+    overflow-x: auto;
+}
+
+.publicFormatField{
+    width: 20%;
+    overflow-x: auto;
+}
+
 .invisibleAfterLoad{
     display: none;
 }

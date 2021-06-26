@@ -1,1 +1,70 @@
-{}
+{
+    "convexhull": {
+        "createdDate": "22/06/2021",
+        "description": "Slopes",
+        "id": "convexhull",
+        "owner": "ryangohca",
+        "problems": [
+            {
+                "format": "IOI",
+                "name": "Convex Hull",
+                "url": "https://codebreaker.xyz/problem/convexhull"
+            },
+            {
+                "format": "IOI",
+                "name": "Jumping 2",
+                "url": "https://codebreaker.xyz/problem/jumping2"
+            },
+            {
+                "format": "IOI",
+                "name": "Meme Magic",
+                "url": "https://codebreaker.xyz/problem/mememagic"
+            }
+        ],
+        "publishedDate": "23/06/2021",
+        "shortDescription": "Slopes",
+        "title": "Convex Hull Practice Problems"
+    },
+    "sqrtdecomp": {
+        "createdDate": "23/06/2021",
+        "description": "return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\")\r\n\r\nreturn true;",
+        "id": "sqrtdecomp",
+        "owner": "ryangohca",
+        "problems": [
+            {
+                "format": "IOI",
+                "name": "Fenwick Tree",
+                "url": "https://codebreaker.xyz/problem/fenwicktree"
+            },
+            {
+                "format": "IOI",
+                "name": "Jakarta Skyscrapers",
+                "url": "https://codebreaker.xyz/problem/skyscraper_apio15"
+            }
+        ],
+        "publishedDate": "23/06/2021",
+        "shortDescription": "return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return ...",
+        "title": "Square Root Decomposition Practice Problems"
+    },
+    "treap": {
+        "createdDate": "24/06/2021",
+        "description": "This is a very very very difficult problem set.",
+        "id": "treap",
+        "owner": "ryangohca",
+        "problems": [
+            {
+                "format": "IOI",
+                "name": "Animal Editor",
+                "url": "https://codebreaker.xyz/problem/animaleditor"
+            },
+            {
+                "format": "ICPC",
+                "name": "Spring Trap",
+                "url": "https://codebreaker.xyz/problem/springtrap"
+            }
+        ],
+        "publishedDate": "24/06/2021",
+        "shortDescription": "This is a very very very difficult problem set.",
+        "title": "Treap Practice Problems"
+    }
+}

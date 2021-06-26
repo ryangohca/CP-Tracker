@@ -162,7 +162,7 @@
 </div>
 {% endif %}
 
-<h2 class="maintitle"> My Collections </h2>
+<h2 class="maintitle"> CP Collections </h2>
 <!-- The whole collection div has a semi-hidden form to handle delete collection requests -->
 <form method="POST" action="{{url_for('deleteCollections')}}">
     <div id="collections">
@@ -181,7 +181,36 @@
 
         <!-- content in the 'Public Collections' tab -->
         <div id="publicCollectionsDiv" class="w3-border collectionscontainer">
-            <p> To be added </p>
+            <div class="cardcontainer flexcontainer">
+                <!-- Collections -->
+                {% for key in publicOrderKey %}
+                    {% set value = publicCollections[key] %}
+                    <div class="w3-display-container collectionCardBorder">
+                        <button type="button" class="w3-card-4 collectionCard" onclick='openModal("public{{key}}Modal")'>
+                            <div class="h3-container w3-gray card-header">
+                                <h5 class="card-title"> {{value['title']}} </h5>
+                            </div>
+
+                            <div class="card-desc">{{value['shortDescription']}}</div>
+
+                            <div class="card-author"> 
+                                <p> <b> Created by: </b> {{value['owner']}} </p>
+                            </div>
+
+                            <div class="card-created"> 
+                                <p> <b> Created on: </b> {{value['createdDate']}} </p>
+                            </div>
+
+                            <div class="card-shared"> 
+                                <p> 
+                                    <b> Shared: </b> 
+                                    {{value['publishedDate']}}
+                                </p>
+                            </div>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
 
         <!-- content in the 'My Collections' tab -->
@@ -377,6 +406,45 @@
                         <button type="submit" class="w3-button w3-right w3-green submitCollection"> Update Problem List </button>
                     </form>
                     <button type="button" class="w3-button w3-left w3-green editCollection" onclick="closeModal('{{key}}Modal');openModal('{{key}}SettingsModal', true);"> Edit Collection </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+<!-- Modals to show users public collections. -->
+{% for key in publicOrderKey %}
+    {% set value = publicCollections[key] %}
+    <div id="public{{key}}Modal" class="w3-modal">
+        <div class="w3-modal-content">
+            <div class="w3-container">
+                <span onclick="closeModal('public{{key}}Modal');" class="w3-button w3-display-topright">&times;</span>
+                <div class="updateProblemsForm w3-container">
+                    <h3> {{value['title']}} </h3>
+                    <h5> Description: </h5>
+                    <div class="w3-container w3-border collectionDescription">{{value['description']}}</div>
+                    <label>  Problems </label>
+                    <table class="w3-table-all problemsTable">
+                        <thead>
+                            <tr class="w3-white"> 
+                                <th class="publicNameField"> Problem Name </th>
+                                <th class="publicUrlLink"> Problem Link </th>
+                                <th class="publicFormatField"> Problem Format </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in range(value['problems']|length) %}
+                                {% set problem = value['problems'][i] %}
+                                <tr>
+                                    <td class="publicNameField"> {{problem['name']}} </td>
+                                    <td class="publicUrlLink"> <a href="{{problem['url']}}"> {{problem['url']}} </a> </td>
+                                    <td class="publicFormatField"> <b> {{problem['format']}} </b> </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <p> <b> Note: </b> You would have to clone the problem list if you want to update the problems that you have done. </p>
+                    <button type="submit" class="w3-button w3-right w3-green submitCollection"> Clone Problem List </button>
                 </div>
             </div>
         </div>

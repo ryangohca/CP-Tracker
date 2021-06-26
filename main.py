@@ -11,6 +11,7 @@ loginUser = None  #Is there a better way?
 PASSWORD_FILE = "data/passwords.json"
 COLLECTIONS_FILE = "data/collections.json"
 IDNAME_FILE = "data/idNames.json"
+PUBLIC_COLLECTIONS_FILE = "data/public.json"
 ALL_PROBLEM_VERDICTS = ["Unattempted", "Wrong Answer", "Accepted", "Time Limit Exceeded", "Memory Limit Exceeded", "Runtime Error", "Theory Solved", "Query Limit Exceeded", "Presentation Error"]
 
 def userNotExist(form, field):
@@ -80,14 +81,40 @@ def success():
         return abort(503, "Access Denied")
     with open(COLLECTIONS_FILE) as f:
         myCollections = json.load(f)[loginUser]["collections"]
+    with open(PUBLIC_COLLECTIONS_FILE) as f:
+        publicCollections = json.load(f)
     orderKey = sorted(myCollections, key=lambda x: datetime.strptime(myCollections[x]["createdDate"], "%d/%m/%Y"))
+    publicOrderKey = sorted(publicCollections, key=lambda x: datetime.strptime(myCollections[x]["createdDate"], "%d/%m/%Y"), reverse=True)
     if 'failure' in request.args:
-        return render_template("homePage.html", failure=request.args['failure'], myCollections=myCollections, orderKey=orderKey, allVerdicts=ALL_PROBLEM_VERDICTS)
+        return render_template("homePage.html", 
+                                failure=request.args['failure'], 
+                                myCollections=myCollections, 
+                                orderKey=orderKey,
+                                publicCollections=publicCollections,
+                                publicOrderKey=publicOrderKey, 
+                                allVerdicts=ALL_PROBLEM_VERDICTS)
     if 'warning' in request.args:
-        return render_template("homePage.html", warning=request.args['warning'], myCollections=myCollections, orderKey=orderKey, allVerdicts=ALL_PROBLEM_VERDICTS)
+        return render_template("homePage.html", 
+                                warning=request.args['warning'], 
+                                myCollections=myCollections,
+                                orderKey=orderKey,
+                                publicCollections=publicCollections,
+                                publicOrderKey=publicOrderKey, 
+                                allVerdicts=ALL_PROBLEM_VERDICTS)
     if 'success' in request.args:
-         return render_template("homePage.html", success=request.args['success'], myCollections=myCollections, orderKey=orderKey, allVerdicts=ALL_PROBLEM_VERDICTS)
-    return render_template("homePage.html", myCollections=myCollections, orderKey=orderKey, allVerdicts=ALL_PROBLEM_VERDICTS)
+         return render_template("homePage.html", 
+                                success=request.args['success'], 
+                                myCollections=myCollections, 
+                                orderKey=orderKey,
+                                publicCollections=publicCollections,
+                                publicOrderKey=publicOrderKey, 
+                                allVerdicts=ALL_PROBLEM_VERDICTS)
+    return render_template("homePage.html", 
+                            myCollections=myCollections, 
+                            orderKey=orderKey,
+                            publicCollections=publicCollections,
+                            publicOrderKey=publicOrderKey, 
+                            allVerdicts=ALL_PROBLEM_VERDICTS)
 
 @app.route("/logout")
 def logout():
@@ -231,6 +258,10 @@ def addCollection():
         addIDToServer(collectionID)
     with open(COLLECTIONS_FILE, 'w') as f:
         json.dump(allUsersCollections, f, indent=4, sort_keys=True)
+    if currCollection['isPublic']:
+        uploadToPublic(currCollection, loginUser)
+    else:
+        deleteFromPublicIfExists(currCollection['id'])
     if warning != '':
         return redirect(url_for('success', warning=warning))
     return redirect(url_for('success', success="Collections Updated!"))
@@ -272,6 +303,7 @@ def deleteCollections():
     with open(IDNAME_FILE) as f:
         idNames = json.load(f)
     for collection in request.form:
+        deleteFromPublicIfExists(collection)
         del idNames[collection]
         del allUsersCollections[loginUser]['collections'][collection]
     with open(COLLECTIONS_FILE, 'w') as f:
@@ -286,4 +318,36 @@ def checkID():
         allIDs = json.load(f)
     return render_template('idChecker.html', allIDs=allIDs)
 
+def uploadToPublic(collectionData, uploadedBy):
+    # This overwrites previous data if id clashes
+    with open(PUBLIC_COLLECTIONS_FILE) as f:
+        publicCollections = json.load(f)
+    dataToUpdate = {}
+    dataToUpdate['createdDate'] = collectionData['createdDate']
+    dataToUpdate['description'] = collectionData['description']
+    dataToUpdate['owner'] = uploadedBy
+    dataToUpdate['id'] = collectionData['id']
+    dataToUpdate['publishedDate'] = collectionData['publishedDate']
+    dataToUpdate['shortDescription'] = collectionData['shortDescription']
+    dataToUpdate['title'] = collectionData['title']
+    dataToUpdate['problems'] = []
+    for problem in collectionData['problems']:
+        thisProblem = {}
+        thisProblem['format'] = problem['format']
+        thisProblem['name'] = problem['name']
+        thisProblem['url'] = problem['url']
+        dataToUpdate['problems'].append(thisProblem)
+    publicCollections[collectionData['id']] = dataToUpdate
+    with open(PUBLIC_COLLECTIONS_FILE, 'w') as f:
+        json.dump(publicCollections, f, indent=4, sort_keys=True)
+
+def deleteFromPublicIfExists(collectionID):
+    with open(PUBLIC_COLLECTIONS_FILE) as f:
+        publicCollections = json.load(f)
+    if collectionID in publicCollections:
+        del publicCollections[collectionID]
+        with open(PUBLIC_COLLECTIONS_FILE, 'w') as f:
+            json.dump(publicCollections, f, indent=4, sort_keys=True)
+
 app.run(host="0.0.0.0", port=8080, debug=True)
+
