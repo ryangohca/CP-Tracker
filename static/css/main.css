@@ -21,3 +21,7 @@ hr{
     margin: 15px 0;
     border-top: 1px solid #bdb6b6;
 }
+
+.invisibleAfterLoad{
+    display: none;
+}

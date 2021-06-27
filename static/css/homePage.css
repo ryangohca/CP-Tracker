@@ -1,34 +1,47 @@
+/* Styles for alert banner */
 .alertContainer{
     margin: 5px 20px;
     padding-left: 20px;
     border-radius: 5px;
 }
 
+/* Styles for displaying collection 'cards' */
+
+/* Offset the entire display from the sides */
 #collections{
     margin-left: 20px;
     margin-right: 20px;
 }
 
+/* Styles the tabs */
 #actualTabs{
     /* actualTabs is a 'flexcontainer' (definition in main.css; however the default for justify-content is 'space-between' */
     /* what we want is to have the tabs to be next to each other without spacing, so we use justify-content: stretch */
     justify-content: stretch;
 }
 
+/* styles the collection card/s wrappers */
+/* again we do not want the cards to 'stick' to the border */
 .collectionscontainer{
     padding-left: 20px;
     padding-right: 20px;
 }
 
+.cardcontainer{
+    justify-content: stretch;
+    flex-wrap: wrap;
+}
+
+.collectionCardBorder{
+    margin: 10px;
+}
+
+/* Styles the actual collection cards */
 .collectionCard{
     display: block;
     /* this is to ensure that the 'Add Collections' Card do not collapse out of shape when there is no collections (created by user),
        as the height of all collection cards is determined by the maximum height of all cards before any height adjustment. */
     min-height: 200px;
-}
-
-.collectionCardBorder{
-    margin: 10px;
 }
 
 .collectionCard:hover{
@@ -55,15 +68,11 @@
     height: 30px;
 }
 
-.cardcontainer{
-    justify-content: stretch;
-    flex-wrap: wrap;
-}
-
 .card-progress-bar > *{
     text-align: right;
 }
 
+/* This styles are specifically for the 'Add Collection card. */
 /* the div in the 'add collection' card that contains an add 'sign' and the "Click to add a new xollection" 'text' */
 .signtextgroup{
     display: flex;
@@ -93,6 +102,9 @@
     text-align: center;
 }
 
+/* Styles for modals */
+
+/* Styles for 'Add collections / edit collections form */
 .collectionForm > *, .updateProblemsForm > *{
     margin: 5px;
 }
@@ -127,15 +139,6 @@ input:read-only{
     color: rgb(194, 189, 168);
 }
 
-.problemsTable{
-    width: 100%;
-}
-
-.problemsTable .clonedInput td input, .problemsTable .clonedInput td select{
-    height: 100%;
-    width: 100%;
-}
-
 .clone, .remove, .addToTODO, .removeFromTODO{
     height: 100%;
     width: 30px;
@@ -162,8 +165,15 @@ input:read-only{
     overflow-y: auto;
 }
 
+/* Styles the table that displays the problems, whether in edit collections / view collectons mode */
 .problemsTable{
+    width: 100%;
     table-layout: fixed;
+}
+
+.problemsTable .clonedInput td input, .problemsTable .clonedInput td select{
+    height: 100%;
+    width: 100%;
 }
 
 /* overflow-x: auto makes sure that every text in the table can be seen, albeit a little inconvenience from the users */
@@ -172,6 +182,7 @@ input:read-only{
     overflow-x: auto;
 }
 
+/* Styles specically for 'view collections' modals */
 .urlLink{
     width: 25%;
     overflow-x: auto;
@@ -207,6 +218,7 @@ input:read-only{
     height: 100%;
 }
 
+/* Similarly, for public view collections (though the layout is a little different) */
 .publicNameField{
     width: 30%;
 }
@@ -221,10 +233,7 @@ input:read-only{
     overflow-x: auto;
 }
 
-.invisibleAfterLoad{
-    display: none;
-}
-
+/* Styles specifically for the clone modals */
 .cloneModalContent{
     max-width: 600px;
 }
@@ -240,4 +249,10 @@ input:read-only{
 
 .cloneNewID, .labelNewID{
     margin: 5px;
+    margin-right: 0px;
+}
+
+.submitClone{
+    margin: 5px;
+    margin-right: 0px;
 }
