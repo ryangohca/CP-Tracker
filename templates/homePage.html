@@ -470,7 +470,7 @@
                 <span onclick="closeModal('public{{key}}CloneModal');" class="w3-button w3-display-topright">&times;</span>
                 <h3> Set New Collection ID </h3>
                 <hr>
-                <form action="/dummy" method="POST" class="cloneForm">
+                <form action="{{url_for('clonePublic')}}" method="POST" class="cloneForm">
                     <input type="hidden" name="originalID" value="{{key}}">
                     <div>
                         <label for="newID" class="labelNewID"> New ID: </label>

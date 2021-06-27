@@ -84,7 +84,7 @@ def success():
     with open(PUBLIC_COLLECTIONS_FILE) as f:
         publicCollections = json.load(f)
     orderKey = sorted(myCollections, key=lambda x: datetime.strptime(myCollections[x]["createdDate"], "%d/%m/%Y"))
-    publicOrderKey = sorted(publicCollections, key=lambda x: datetime.strptime(myCollections[x]["createdDate"], "%d/%m/%Y"), reverse=True)
+    publicOrderKey = sorted(publicCollections, key=lambda x: datetime.strptime(publicCollections[x]["createdDate"], "%d/%m/%Y"), reverse=True)
     suggestedIDs = [reformID(collectionId) for collectionId in publicOrderKey]
     if 'failure' in request.args:
         return render_template("homePage.html",
@@ -354,5 +354,47 @@ def deleteFromPublicIfExists(collectionID):
         with open(PUBLIC_COLLECTIONS_FILE, 'w') as f:
             json.dump(publicCollections, f, indent=4, sort_keys=True)
 
-app.run(host="0.0.0.0", port=8080, debug=True)
+@app.route('/clonePublic', methods=["GET", "POST"])
+def clonePublic():
+    global loginUser
+    if loginUser is None:
+        return abort(503, "Access Denied")
+    newID = request.form['newID']
+    warning = ''
+    if usedID(newID):
+        newID = reformID(newID)
+        warning = f"Collection ID '{request.form['newID']}' has been renamed to '{newID}' as it is already in use."
+    originalCollectionID = request.form['originalID']
+    with open(PUBLIC_COLLECTIONS_FILE) as f:
+        # We will modify from the data gotten in PUBLIC_COLLECTIONS_FILE
+        clonedCollection = json.load(f)[originalCollectionID]
+    del clonedCollection['owner']
+    clonedCollection['id'] = newID
+    clonedCollection['isPublic'] = False
+    clonedCollection['publishedDate'] = None
+    clonedCollection['solvedProblems'] = 0
+    clonedCollection['totalProblems'] = len(clonedCollection['problems'])
+    for i in range(clonedCollection['totalProblems']):
+        if clonedCollection['problems'][i]['format'] == "ICPC":
+            clonedCollection['problems'][i]['score'] = "N.A."
+        else:
+            clonedCollection['problems'][i]['score'] = 0
+        clonedCollection['problems'][i]['important'] = False
+        clonedCollection['problems'][i]['solved'] = False
+        clonedCollection['problems'][i]['status'] = "Unattempted"
 
+    with open(COLLECTIONS_FILE) as f:
+        allUserCollections = json.load(f)
+
+    allUserCollections[loginUser]['collections'][newID] = clonedCollection
+
+    addIDToServer(newID)
+    with open(COLLECTIONS_FILE, 'w') as f:
+        json.dump(allUserCollections, f, indent=4, sort_keys=True)
+    
+    if warning != '':
+        return redirect(url_for('success', warning=warning))
+    else:
+        return redirect(url_for('success', success=f"Public Collection `{clonedCollection['title']}` cloned!"))
+
+app.run(host="0.0.0.0", port=8080, debug=True)
