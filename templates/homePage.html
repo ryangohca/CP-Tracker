@@ -136,6 +136,27 @@
     {% endfor %}
 {% endmacro %}
 
+{% macro createSearchBar(currDiv, options) %}
+    <div class="searchDiv">
+        <label> Search: </label>
+        <input type="text" class="searchInput" id="{{currDiv}}searchInput" oninput="searchCollections('{{currDiv}}', this.value);">
+    </div>
+    <div class="flexcontainer searchOptions" id="{{currDiv}}Options">
+        <label class="optionsLabel"> Options: </label>
+        <div class="flexcontainer optionsCheckboxesContainer">
+            {% for option in options %}
+                <div class="optionBox">
+                    {% if option=="Search All" %}
+                        <input type="checkbox" id="{{currDiv}}{{option}}" onclick="searchCollections('{{currDiv}}', this.closest('.searchcontainer').getElementsByClassName('searchInput')[0].value);" checked>
+                    {% else %}
+                        <input type="checkbox" id="{{currDiv}}{{option}}" onclick="searchCollections('{{currDiv}}', this.closest('.searchcontainer').getElementsByClassName('searchInput')[0].value);">
+                    {% endif %}
+                    <label>{{option}}</label>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
 {% block otherScripts %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/homePage.css') }}">
 <script src="{{ url_for('static', filename='js/homePage.js') }}"></script>
@@ -168,11 +189,11 @@
     <div id="collections">
         <!-- tab links -->
         <div class="flexcontainer" id="collectionstab">
-            <div id="actualTabs" class="flexcontainer">
+            <div class="tabsDiv flexcontainer">
                 <button type="button" class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openCollectionsTab("publicCollectionsDiv", false);'> Public Collections </button>
                 <button type="button" class="w3-bar-item w3-button w3-light-gray w3-border" onclick='openCollectionsTab("myCollectionsDiv", true);'> My Collections </button>
             </div>
-            <div id="actualTabs" class="flexcontainer">
+            <div class="tabsDiv flexcontainer">
                 <button type="submit" class="w3-bar-item w3-button w3-green invisibleAfterLoad" id="deletebutton"> Delete </button>
                 <button type="button" class="w3-bar-item w3-button w3-green invisibleAfterLoad" id="cancelbutton"> Cancel </button>
                 <button type="button" class="w3-bar-item w3-button w3-green invisibleAfterLoad" id="editcollectionsbutton"> Edit Collections </button>
@@ -181,6 +202,9 @@
 
         <!-- content in the 'Public Collections' tab -->
         <div id="publicCollectionsDiv" class="w3-border collectionscontainer">
+            <div class="searchcontainer flexcontainer">
+                {{createSearchBar(currDiv="publicCollectionsDiv", options=["Search All", "Search Title", "Search User", "Search Description", "Match on Words"])}}
+            </div>
             <div class="cardcontainer flexcontainer">
                 <!-- Collections -->
                 {% for key in publicOrderKey %}
@@ -192,6 +216,9 @@
                             </div>
 
                             <div class="card-desc">{{value['shortDescription']}}</div>
+
+                            <!-- Used for search -->
+                            <div class="card-full-desc invisibleAfterLoad"><textarea>{{value['description']}}</textarea></div>
 
                             <div class="card-author"> 
                                 <p> <b> Created by: </b> {{value['owner']}} </p>
@@ -215,6 +242,9 @@
 
         <!-- content in the 'My Collections' tab -->
         <div id="myCollectionsDiv" class="w3-border collectionscontainer">
+            <div class="searchcontainer flexcontainer">
+                {{createSearchBar(currDiv="myCollectionsDiv", options=["Search All", "Search Title", "Search Description", "Match on Words"])}}
+            </div>
             <div class="cardcontainer flexcontainer">
                 <!-- Collections -->
                 {% for key in orderKey %}
@@ -236,6 +266,9 @@
 
                             <div class="card-desc">{{value['shortDescription']}}</div>
 
+                            <!-- Used for search -->
+                            <div class="card-full-desc invisibleAfterLoad"><textarea>{{value['description']}}</textarea></div>
+
                             <div class="card-created"> 
                                 <p> <b> Created on: </b> {{value['createdDate']}} </p>
                             </div>
@@ -254,7 +287,7 @@
                     </div>
                 {% endfor %}
                 <!-- Add New Collections -->
-                <div class="w3-display-container collectionCardBorder">
+                <div class="w3-display-container collectionCardBorder addCollectionCard">
                     <button type="button" class="w3-card-4 collectionCard" onclick="openModal('addcollectionmodal', true)">
                         <div class="signtextgroup">
                             <div class="w3-border addsign"> <p class="addsigntext"> + </p> </div>
@@ -316,7 +349,7 @@
                     <h3> {{value['title']}} </h3>
                     <hr>
                     <h5> Description: </h5>
-                    <div class="w3-container w3-border collectionDescription">{{value['description']}}</div>
+                    <textarea class="w3-container w3-border collectionDescription" disabled>{{value['description']}}</textarea>
                     <label> TODO Problems </label>
                     <table class="w3-table-all problemsTable">
                         <thead>
@@ -430,7 +463,7 @@
                     <h3> {{value['title']}} </h3>
                     <hr>
                     <h5> Description: </h5>
-                    <div class="w3-container w3-border collectionDescription">{{value['description']}}</div>
+                    <textarea class="w3-container w3-border collectionDescription" disabled>{{value['description']}}</textarea>
                     <label>  Problems </label>
                     <table class="w3-table-all problemsTable">
                         <thead>

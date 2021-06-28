@@ -38,7 +38,10 @@ function normaliseCard(cardLength){
     var maxDescHeight = 0;
     for (var content of document.getElementsByClassName("collectionCard")) {
         // div [class='collectionscontainer'] -> div[class='flex-container'] -> div[class='collectionCardBorder'] -> div [class='collectionCard']
-        if (content.parentElement.parentElement.parentElement.style.display === 'none') continue; // do not EVER touch display:none elements
+        // there are 2 cases where display is none.
+        // 1. The tab is hidden.
+        // 2. The card is hidden.
+        if (content.parentElement.parentElement.parentElement.style.display === 'none' || content.parentElement.style.display === 'none') continue; // do not EVER touch display:none elements
         content.style.width = (containerLen / expectedCards) - 30 + "px"; // 30px offset because of margin
         // calculate max height of the whole card for all cards
         maxHeight = Math.max(content.offsetHeight, maxHeight);
@@ -58,7 +61,7 @@ function normaliseCard(cardLength){
         }
     }
     for (var content of document.getElementsByClassName("collectionCard")) {
-        if (content.parentElement.parentElement.parentElement.style.display === 'none') continue;
+        if (content.parentElement.parentElement.parentElement.style.display === 'none' || content.parentElement.style.display === 'none') continue;
         content.style.height = maxHeight + "px";
         var title = content.getElementsByClassName("card-header");
         if (title.length !== 0){
@@ -325,6 +328,99 @@ function updateAll(className, value){
     for (var elem of document.getElementsByClassName(className)){
         elem.value = value;
     }
+}
+
+/* Get all the words in string. Works with contractions and punctuations. */
+function getAllWords(str){
+    return str.match(/\b(\w+)'?(\w+)?\b/g) ;
+}
+
+/* Returns true if needle is a substring of 'haystack', or is a word in 'haystack' if matchOnWords is true. */
+function isSubstr(haystack, needle, matchOnWords){
+     if (matchOnWords){
+        var words = getAllWords(haystack);
+        return words.includes(needle);
+    } else {
+        // even though both have method "includes", they are essentially different types, so bot the best to put them together.
+        return haystack.includes(needle);
+    }
+}
+/* Only show the cars that matches the search criteria.
+   Possible options are as follows:
+   Search All: Search every single place for the input query. (Default)
+   Search Title: Search the input query on the cards titles only.
+   Search User: Search the input query on the owner of the card only.
+   Search Description: Search the input query on the description of the card only.
+   Match on Words: The card only shows up if there is at least one word that matches.
+
+   Special Case: when searchQuery is '' (ie. no input / input only has blanks), we show all the cards.
+*/
+function searchCollections(collectionsDiv, searchQuery){
+    var wholeDiv = document.getElementById(collectionsDiv);
+    var allCards = wholeDiv.getElementsByClassName("collectionCardBorder");
+    searchQuery = searchQuery.trim();
+    if (searchQuery == ''){
+        for (var elem of allCards){
+            elem.style.display = "block";
+        }
+        normaliseCard(cardLength);
+        return;
+    }
+    var options = wholeDiv.getElementsByClassName("optionBox");
+    var searchAll = false, searchTitle = false, searchUser = false, searchDescription = false, matchOnWords = false;
+    for (var elem of options){
+        if (elem.getElementsByTagName("input")[0].checked){
+            var option = elem.getElementsByTagName("label")[0].innerHTML;
+            if (option == "Search All") searchAll = true;
+            if (option == "Search Title") searchTitle = true;
+            if (option == "Search User") searchUser = true;
+            if (option == "Search Description") searchDescription = true;
+            if (option == "Match on Words") matchOnWords = true;
+        }
+    }
+    for (var elem of allCards){
+        if (Array.from(elem.classList).includes("addCollectionCard")) continue; // exclude, special card that should be visible at all times
+        elem.style.display = "none";
+    }
+    if (searchAll || searchTitle){
+        for (var card of allCards){
+            if (Array.from(card.classList).includes("addCollectionCard")) continue;
+            var title = card.getElementsByClassName("card-title")[0].innerHTML.trim();
+            if (isSubstr(title, searchQuery, matchOnWords)){
+                card.style.display = "block";
+            }
+        }
+    }
+    if (searchAll || searchUser){
+        for (var card of allCards){
+            if (Array.from(card.classList).includes("addCollectionCard")) continue;
+            var authorDiv = card.getElementsByClassName("card-author");
+            if (authorDiv.length == 0) break;
+            /* the structure is like that: 
+            <div class="card-author"> 
+                <p> <b> Created by: </b> <author name> </p>
+            </div>
+            So we get this div class through searching for class name "card-author" at the top, then subclass tag query to get to p.
+            Then after that when we .childNode, the return value is [text, b, text].
+            The first text is a space, the 'b' is the bolded "Created by:", the last text is the text that we want.
+            After that we convert into Javascript string using .wholeText, then trim it to get without spaces.
+            */
+            var author = authorDiv[0].getElementsByTagName("p")[0].childNodes[2].wholeText.trim();
+            if (isSubstr(author, searchQuery, matchOnWords)){
+                card.style.display = "block";
+            }
+        }
+    }
+    if (searchAll || searchDescription){
+        for (var card of allCards){
+            if (Array.from(card.classList).includes("addCollectionCard")) continue;
+            var description = card.getElementsByClassName("card-full-desc")[0].getElementsByTagName("textarea")[0].innerHTML.trim();
+            if (isSubstr(description, searchQuery, matchOnWords)){
+                card.style.display = "block";
+            }
+        }
+    }
+    normaliseCard(cardLength);
 }
 
 const cardLength = 360;
