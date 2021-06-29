@@ -7,7 +7,7 @@ import flask
 from flask import render_template, request, redirect, url_for, abort
 from wtforms import Form, StringField, PasswordField, validators
 
-loginUser = None  #Is there a better way?
+loginUser = None  #Stores current username that is logged in, or none if no user is logged in.
 PASSWORD_FILE = "data/passwords.json"
 COLLECTIONS_FILE = "data/collections.json"
 IDNAME_FILE = "data/idNames.json"
@@ -15,6 +15,7 @@ PUBLIC_COLLECTIONS_FILE = "data/public.json"
 ALL_PROBLEM_VERDICTS = ["Unattempted", "Wrong Answer", "Accepted", "Time Limit Exceeded", "Memory Limit Exceeded", "Runtime Error", "Theory Solved", "Query Limit Exceeded", "Presentation Error"]
 
 def userNotExist(form, field):
+    """Checks if username exists in the server. Throws ValidationError if username does not exist."""
     username = field.data.strip()
     with open(PASSWORD_FILE) as f:
         userDict = json.load(f)
@@ -22,6 +23,7 @@ def userNotExist(form, field):
             raise validators.ValidationError("Username already exists.")
 
 def userExist(form, field):
+    """Checks if username does not exist in our server. If it does exist, throw ValidationError."""
     username = field.data.strip()
     with open(PASSWORD_FILE) as f:
         userDict = json.load(f)
@@ -29,6 +31,7 @@ def userExist(form, field):
             raise validators.ValidationError("Username does not exist in server.")
 
 def passwordMatch(form, field):
+    """Checks if password of the user matches the one stored in the server. Throws ValidationError if passwords do not match."""
     # We do not strip leading / ending spaces, it could be deliberate as a password.
     attemptedHashedPassword = hashlib.sha512(bytes(field.data, encoding='utf8')).hexdigest()
     with open(PASSWORD_FILE) as f:
@@ -68,6 +71,7 @@ def root():
 
 @app.route("/login", methods=["POST"])
 def login():
+    """If login in successful, redirect users to the home page; if not, redirect them back to the login page and shows them the form errors."""
     global loginUser
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -131,6 +135,7 @@ def logout():
 
 @app.route("/", methods=["GET", "POST"])
 def signUp():
+    """If successful, auto log the user in. If not, redirect them back to the login page and show all the form errors."""
     global loginUser 
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -162,6 +167,13 @@ def usedID(id):
             return False
 
 def reformID(usedID):
+    """Modify `usedID` such that the returned id is unique to the ids stored in the server.
+    
+    The `usedID` is modified as follows:
+    1. remove any trailing numbers. Let the resulting string be s.
+    2. Brute force all the possible integers starting from 1. 
+       Returns the smallest integer x such that s + str(x) is an unused id.
+    """
     with open(IDNAME_FILE) as f:
         ids = json.load(f)
     regex = re.compile("^(.*?)(\d*)$")

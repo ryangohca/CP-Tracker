@@ -31,7 +31,14 @@
     </head>
     <body>
         <div id="infoandlogin">
-            <div id="infocol"> </div>
+            <div id="infocol" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5) ), url({{ url_for('static', filename='images/exampleRun.png') }});">
+                <img src="{{ url_for('static', filename='images/exampleRun.png') }}">
+                <div id="infoImageText">
+                    <h3 class="sectiontitle"> CP Tracker </h3>
+                    <p> Tired of having to collate and maintain your own Competitive Programming problemset? Fret Not! CP Tracker is here to help you! </p>
+                    <p> In short, CP Tracker is a website for you to track your progress on CP Problems, grouped in collections. You can even share these collections you made! </p>
+                </div>
+            </div>
             <div id="loginformdiv"> 
                 <h3 class="centered"> Sign In </h3>
                 <form action="{{ url_for('login') }}" method="POST" id="loginForm" class="w3-container">

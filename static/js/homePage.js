@@ -337,6 +337,8 @@ function getAllWords(str){
 
 /* Returns true if needle is a substring of 'haystack', or is a word in 'haystack' if matchOnWords is true. */
 function isSubstr(haystack, needle, matchOnWords){
+    haystack = haystack.toLowerCase();
+    needle = needle.toLowerCase();
      if (matchOnWords){
         var words = getAllWords(haystack);
         return words.includes(needle);

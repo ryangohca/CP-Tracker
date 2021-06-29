@@ -127,7 +127,7 @@
             },
             "sqrtdecomp": {
                 "createdDate": "23/06/2021",
-                "description": "return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\")\r\n\r\nreturn true;",
+                "description": "These problems can be solved using square root decomposition. What is square root decomposition? Sqrt Decomposition is a method (or a data structure) that allows you to perform some common operations (finding sum of the elements of the sub-array, finding the minimal/maximal element, etc.) in O(\u221an) operations, which is much faster than O(n) for the trivial algorithm.\r\n\r\ntl,dr: Square root decomposition speeds up your program by a fair bit.",
                 "id": "sqrtdecomp",
                 "isPublic": true,
                 "problems": [
@@ -151,7 +151,7 @@
                     }
                 ],
                 "publishedDate": "23/06/2021",
-                "shortDescription": "return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return abort(503, \"Access Denied\") return ...",
+                "shortDescription": "These problems can be solved using square root decomposition. What is square root decomposition? Sqrt Decomposition is a method (or a data structur...",
                 "solvedProblems": 1,
                 "title": "Square Root Decomposition Practice Problems",
                 "totalProblems": 2

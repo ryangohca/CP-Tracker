@@ -278,6 +278,10 @@ input:read-only{
     flex-wrap: wrap;
 }
 
+.searchcontainer p{
+    margin: 5px;
+}
+
 .searchDiv{
     width: 100%;
     display: flex;
