@@ -188,5 +188,8 @@
                 "totalProblems": 2
             }
         }
+    },
+    "testuser": {
+        "collections": {}
     }
 }
